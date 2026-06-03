@@ -336,7 +336,7 @@ export default function App() {
       ) : isMarketing ? (
         <AiMarketingCenter />
       ) : (
-        <div className="flex flex-1 w-full max-w-[1920px] mx-auto overflow-hidden">
+        <div className="flex flex-1 w-full overflow-hidden">
           {/* Main scrollable area */}
           <main ref={mainRef} className="flex-1 px-4 lg:px-8 py-6 w-full custom-scrollbar relative overflow-y-auto overflow-x-hidden">
             <div className="w-full space-y-6">

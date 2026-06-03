@@ -3,7 +3,7 @@ import React from 'react';
 export default function Footer() {
   return (
     <footer className="w-full py-12 px-4 mt-8 overflow-x-auto custom-scrollbar">
-      <div className="max-w-[1920px] mx-auto flex items-center justify-center gap-x-8 text-[13px] text-slate-400 whitespace-nowrap min-w-max">
+      <div className="w-full flex items-center justify-center gap-x-8 text-[13px] text-slate-400 whitespace-nowrap min-w-max">
         <span>Copyright © 2014-2026 合肥星爵互动信息科技有限公司版权所有</span>
         <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors">皖ICP备14022481号</a>
         <span>增值电信业务经营许可证：皖B2-20200055</span>
