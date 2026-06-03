@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gamified Marketing Sidebar Concepts</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #e9eef6;
+        color: #14213d;
+        font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      }
+
+      .page {
+        display: grid;
+        gap: 36px;
+        padding: 36px;
+      }
+
+      .concept {
+        overflow: hidden;
+        border: 1px solid rgba(123, 139, 165, 0.25);
+        border-radius: 18px;
+        background: #f7f9fd;
+        box-shadow: 0 24px 70px rgba(28, 45, 78, 0.12);
+      }
+
+      .concept-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 24px;
+        background: #ffffff;
+        border-bottom: 1px solid #e6ebf3;
+      }
+
+      .concept-title {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .concept-title strong {
+        font-size: 17px;
+        letter-spacing: 0;
+      }
+
+      .concept-title span {
+        color: #66748a;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .screen {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        min-height: 760px;
+      }
+
+      .main {
+        padding: 22px 24px 30px;
+        background: #f3f6fb;
+      }
+
+      .top-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) 320px;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+
+      .event-card,
+      .search {
+        height: 74px;
+        border-radius: 16px;
+        background: #ffffff;
+        border: 1px solid #e4eaf3;
+        box-shadow: 0 8px 24px rgba(39, 58, 92, 0.05);
+      }
+
+      .event-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px;
+      }
+
+      .calendar {
+        width: 46px;
+        height: 52px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(180deg, #ff2f73, #ffffff 38%);
+        color: #1d2a44;
+        font-weight: 900;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+      }
+
+      .event-copy {
+        min-width: 0;
+      }
+
+      .event-copy b {
+        display: block;
+        font-size: 14px;
+      }
+
+      .event-copy span {
+        display: block;
+        margin-top: 4px;
+        color: #6d7b90;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .play {
+        margin-left: auto;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #2463ff;
+      }
+
+      .search {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px 0 18px;
+        color: #7a8799;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .search button {
+        width: 62px;
+        height: 42px;
+        border: 0;
+        border-radius: 12px;
+        background: #2862ff;
+        color: #fff;
+        font-weight: 900;
+      }
+
+      .category-strip {
+        display: grid;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 28px;
+      }
+
+      .category-card {
+        height: 112px;
+        border-radius: 16px;
+        background:
+          linear-gradient(180deg, rgba(3, 7, 18, 0.08), rgba(3, 7, 18, 0.7)),
+          radial-gradient(circle at 70% 20%, #ffce55, transparent 30%),
+          linear-gradient(135deg, #1050ff, #1fd1a5);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 12px;
+        box-shadow: 0 14px 26px rgba(22, 39, 73, 0.12);
+      }
+
+      .category-card b {
+        font-size: 14px;
+      }
+
+      .category-card span {
+        margin-top: 3px;
+        font-size: 10px;
+        font-weight: 800;
+        opacity: 0.85;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .section-title b {
+        font-size: 15px;
+      }
+
+      .sort {
+        padding: 8px 16px;
+        border: 1px solid #a9b8cc;
+        border-radius: 12px;
+        background: #fff;
+        color: #33445e;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .template {
+        min-width: 0;
+      }
+
+      .cover {
+        aspect-ratio: 3 / 5;
+        border-radius: 13px;
+        background:
+          linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(140deg, #083735, #1a8662 55%, #f7a412);
+        background-size: 16px 16px, 16px 16px, auto;
+        box-shadow: 0 10px 22px rgba(30, 48, 82, 0.1);
+      }
+
+      .template:nth-child(2n) .cover {
+        background:
+          linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(145deg, #b91137, #ef5432, #f59f00);
+        background-size: 16px 16px, 16px 16px, auto;
+      }
+
+      .template:nth-child(3n) .cover {
+        background:
+          linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(145deg, #062e2d, #145d64, #2463ff);
+        background-size: 16px 16px, 16px 16px, auto;
+      }
+
+      .template b {
+        display: block;
+        margin-top: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 13px;
+      }
+
+      .tags {
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .tags span {
+        padding: 4px 7px;
+        border-radius: 6px;
+        background: #e8eef6;
+        color: #64748b;
+        font-size: 10px;
+        font-weight: 800;
+      }
+
+      .sidebar {
+        position: relative;
+        padding: 18px 14px;
+        background: #ffffff;
+        border-right: 1px solid #e7ecf3;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 7px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 42px;
+        padding: 0 12px;
+        border-radius: 13px;
+        color: #39506e;
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .ico {
+        width: 20px;
+        text-align: center;
+        color: currentColor;
+      }
+
+      .promo-stack {
+        display: grid;
+        gap: 8px;
+        margin-top: 26px;
+      }
+
+      .mini-promo {
+        padding: 10px;
+        border-radius: 12px;
+        background: #eafff5;
+        color: #12754a;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .support {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 18px;
+        display: grid;
+        gap: 8px;
+        color: #66758b;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .concept-a .sidebar {
+        background: linear-gradient(180deg, #ffffff, #f5f8ff);
+      }
+
+      .concept-a .nav-item.active {
+        background: #2463ff;
+        color: #ffffff;
+        box-shadow: 0 10px 24px rgba(36, 99, 255, 0.28);
+      }
+
+      .concept-a .nav-item:not(.active):hover,
+      .concept-a .nav-item.soft {
+        background: #eef4ff;
+        color: #1f55d6;
+      }
+
+      .concept-b .screen {
+        grid-template-columns: 96px 1fr;
+      }
+
+      .concept-b .sidebar {
+        padding: 16px 12px;
+        background: #0f172a;
+        border-right: 0;
+      }
+
+      .concept-b .nav-item {
+        height: 64px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        padding: 0;
+        color: #aeb9cd;
+        font-size: 11px;
+        border-radius: 18px;
+      }
+
+      .concept-b .ico {
+        width: auto;
+        font-size: 20px;
+      }
+
+      .concept-b .nav-item.active {
+        color: #fff;
+        background: linear-gradient(180deg, #386bff, #7c3cff);
+        box-shadow: 0 16px 26px rgba(56, 107, 255, 0.35);
+      }
+
+      .concept-b .promo-stack,
+      .concept-b .support {
+        display: none;
+      }
+
+      .concept-b .main {
+        background: #f5f7fb;
+      }
+
+      .concept-c .screen {
+        grid-template-columns: 260px 1fr;
+      }
+
+      .concept-c .sidebar {
+        padding: 18px;
+        background:
+          radial-gradient(circle at 20% 10%, rgba(37, 99, 235, 0.16), transparent 24%),
+          #ffffff;
+      }
+
+      .concept-c .nav-list {
+        gap: 9px;
+      }
+
+      .concept-c .nav-item {
+        height: 52px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        box-shadow: 0 8px 18px rgba(29, 45, 78, 0.04);
+      }
+
+      .concept-c .nav-item.active {
+        position: relative;
+        border-color: #9bb8ff;
+        background: linear-gradient(135deg, #eff5ff, #ffffff);
+        color: #164fc7;
+      }
+
+      .concept-c .nav-item.active::after {
+        content: "";
+        position: absolute;
+        right: 12px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ff8a00;
+        box-shadow: 0 0 0 5px rgba(255, 138, 0, 0.12);
+      }
+
+      .concept-c .mini-promo {
+        background: linear-gradient(135deg, #ecfeff, #eef2ff);
+        color: #1e4e8c;
+        border: 1px solid #d9e5ff;
+      }
+
+      .subhead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        color: #58677f;
+        font-size: 11px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 1280px) {
+        .top-row {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .category-strip,
+        .grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="concept concept-a">
+        <div class="concept-header">
+          <div class="concept-title">
+            <strong>方案 A：轻量专业型</strong>
+            <span>保留当前 SaaS 气质，强化选中态、分组和可扫读性，开发成本最低。</span>
+          </div>
+        </div>
+        <div class="screen">
+          <aside class="sidebar">
+            <div class="subhead">玩法导航</div>
+            <nav class="nav-list">
+              <div class="nav-item active"><span class="ico">🎮</span>玩法中心</div>
+              <div class="nav-item soft"><span class="ico">⚡</span>消除类</div>
+              <div class="nav-item"><span class="ico">🛡</span>射击类</div>
+              <div class="nav-item"><span class="ico">?</span>益智类</div>
+              <div class="nav-item"><span class="ico">🏆</span>合成类</div>
+              <div class="nav-item"><span class="ico">🧩</span>闯关类</div>
+              <div class="nav-item"><span class="ico">⚡</span>反应类</div>
+              <div class="nav-item"><span class="ico">👥</span>接物类</div>
+              <div class="nav-item"><span class="ico">✨</span>动作类</div>
+            </nav>
+            <div class="promo-stack">
+              <div class="mini-promo">微信小程序对接<br />无需开发 极速链接</div>
+              <div class="mini-promo">APP 集成安全方案<br />iOS & Android 无缝嵌入</div>
+              <div class="mini-promo">活动接口打通<br />资产互通 数据同步</div>
+            </div>
+            <div class="support">
+              <span>服务与支持</span>
+              <b>帮助中心</b>
+              <b>客户案例</b>
+              <b>开放平台</b>
+              <b>定制服务</b>
+            </div>
+          </aside>
+          <section class="main">
+            <div class="top-row">
+              <div class="event-card"><div class="calendar">01</div><div class="event-copy"><b>儿童节狂欢</b><span>欢乐接糖果</span></div><div class="play"></div></div>
+              <div class="event-card"><div class="calendar">19</div><div class="event-copy"><b>端午拼客节</b><span>粽情划龙舟</span></div><div class="play"></div></div>
+              <div class="event-card"><div class="calendar">暑</div><div class="event-copy"><b>暑期狂欢季</b><span>清凉切西瓜</span></div><div class="play"></div></div>
+              <div class="search">搜索 营销端午节集客消除玩法 <button>搜索</button></div>
+            </div>
+            <div class="category-strip">
+              <div class="category-card"><b>精选</b><span>爆款玩法推荐</span></div>
+              <div class="category-card"><b>消除类</b><span>爽快连消裂变</span></div>
+              <div class="category-card"><b>射击类</b><span>限时射击闯关</span></div>
+              <div class="category-card"><b>益智类</b><span>答题脑力引流</span></div>
+              <div class="category-card"><b>合成类</b><span>趣味合成养成</span></div>
+              <div class="category-card"><b>闯关类</b><span>大促过关解锁</span></div>
+              <div class="category-card"><b>反应类</b><span>手速极限抢券</span></div>
+              <div class="category-card"><b>动作类</b><span>微操跑酷闯关</span></div>
+            </div>
+            <div class="section-title"><b>精选玩法</b><div class="sort">综合排序⌄</div></div>
+            <div class="grid">
+              <div class="template"><div class="cover"></div><b>粽情端午龙舟竞渡</b><div class="tags"><span>动作类</span><span>国潮风</span></div></div>
+              <div class="template"><div class="cover"></div><b>全民狂热合成大西瓜</b><div class="tags"><span>合成类</span><span>可爱风</span></div></div>
+              <div class="template"><div class="cover"></div><b>端午太空行</b><div class="tags"><span>益智类</span><span>国潮风</span></div></div>
+              <div class="template"><div class="cover"></div><b>喜庆黄金接财神</b><div class="tags"><span>接物类</span><span>喜庆风</span></div></div>
+              <div class="template"><div class="cover"></div><b>中秋团圆月饼大合成</b><div class="tags"><span>合成类</span><span>节日</span></div></div>
+              <div class="template"><div class="cover"></div><b>新春年兽大作战</b><div class="tags"><span>闯关类</span><span>爆款</span></div></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="concept concept-b">
+        <div class="concept-header">
+          <div class="concept-title">
+            <strong>方案 B：游戏主机型</strong>
+            <span>左侧收窄成图标 Dock，把空间还给模板内容，适合强调“游戏化营销”的品牌差异。</span>
+          </div>
+        </div>
+        <div class="screen">
+          <aside class="sidebar">
+            <nav class="nav-list">
+              <div class="nav-item active"><span class="ico">🎮</span>中心</div>
+              <div class="nav-item"><span class="ico">⚡</span>消除</div>
+              <div class="nav-item"><span class="ico">🛡</span>射击</div>
+              <div class="nav-item"><span class="ico">?</span>益智</div>
+              <div class="nav-item"><span class="ico">🏆</span>合成</div>
+              <div class="nav-item"><span class="ico">🧩</span>闯关</div>
+              <div class="nav-item"><span class="ico">👥</span>接物</div>
+              <div class="nav-item"><span class="ico">✨</span>动作</div>
+            </nav>
+          </aside>
+          <section class="main">
+            <div class="top-row">
+              <div class="event-card"><div class="calendar">01</div><div class="event-copy"><b>儿童节狂欢</b><span>欢乐接糖果</span></div><div class="play"></div></div>
+              <div class="event-card"><div class="calendar">19</div><div class="event-copy"><b>端午拼客节</b><span>粽情划龙舟</span></div><div class="play"></div></div>
+              <div class="event-card"><div class="calendar">暑</div><div class="event-copy"><b>暑期狂欢季</b><span>清凉切西瓜</span></div><div class="play"></div></div>
+              <div class="search">搜索 爆款游戏玩法 <button>搜索</button></div>
+            </div>
+            <div class="category-strip">
+              <div class="category-card"><b>精选</b><span>爆款玩法推荐</span></div>
+              <div class="category-card"><b>消除类</b><span>爽快连消裂变</span></div>
+              <div class="category-card"><b>射击类</b><span>限时射击闯关</span></div>
+              <div class="category-card"><b>益智类</b><span>答题脑力引流</span></div>
+              <div class="category-card"><b>合成类</b><span>趣味合成养成</span></div>
+              <div class="category-card"><b>闯关类</b><span>大促过关解锁</span></div>
+              <div class="category-card"><b>反应类</b><span>手速极限抢券</span></div>
+              <div class="category-card"><b>动作类</b><span>微操跑酷闯关</span></div>
+            </div>
+            <div class="section-title"><b>精选玩法</b><div class="sort">综合排序⌄</div></div>
+            <div class="grid">
+              <div class="template"><div class="cover"></div><b>粽情端午龙舟竞渡</b><div class="tags"><span>动作类</span><span>国潮风</span></div></div>
+              <div class="template"><div class="cover"></div><b>全民狂热合成大西瓜</b><div class="tags"><span>合成类</span><span>可爱风</span></div></div>
+              <div class="template"><div class="cover"></div><b>端午太空行</b><div class="tags"><span>益智类</span><span>国潮风</span></div></div>
+              <div class="template"><div class="cover"></div><b>喜庆黄金接财神</b><div class="tags"><span>接物类</span><span>喜庆风</span></div></div>
+              <div class="template"><div class="cover"></div><b>中秋团圆月饼大合成</b><div class="tags"><span>合成类</span><span>节日</span></div></div>
+              <div class="template"><div class="cover"></div><b>新春年兽大作战</b><div class="tags"><span>闯关类</span><span>爆款</span></div></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="concept concept-c">
+        <div class="concept-header">
+          <div class="concept-title">
+            <strong>方案 C：运营工作台型</strong>
+            <span>分类导航更像营销运营工具，增加状态卡和二级信息，适合后续承载筛选、数据和权限。</span>
+          </div>
+        </div>
+        <div class="screen">
+          <aside class="sidebar">
+            <div class="subhead">游戏化营销</div>
+            <nav class="nav-list">
+              <div class="nav-item active"><span class="ico">🎮</span>玩法中心</div>
+              <div class="nav-item"><span class="ico">⚡</span>消除类 <small>128</small></div>
+              <div class="nav-item"><span class="ico">🛡</span>射击类 <small>86</small></div>
+              <div class="nav-item"><span class="ico">?</span>益智类 <small>92</small></div>
+              <div class="nav-item"><span class="ico">🏆</span>合成类 <small>74</small></div>
+              <div class="nav-item"><span class="ico">🧩</span>闯关类 <small>66</small></div>
+              <div class="nav-item"><span class="ico">⚡</span>反应类 <small>58</small></div>
+              <div class="nav-item"><span class="ico">👥</span>接物类 <small>42</small></div>
+              <div class="nav-item"><span class="ico">✨</span>动作类 <small>38</small></div>
+            </nav>
+            <div class="promo-stack">
+              <div class="mini-promo">本周上新 24 个玩法<br />端午、暑期、618 场景已覆盖</div>
+              <div class="mini-promo">接口与投放能力<br />小程序 / APP / 私域活动</div>
+            </div>
+          </aside>
+          <section class="main">
+            <div class="top-row">
+              <div class="event-card"><div class="calendar">01</div><div class="event-copy"><b>儿童节狂欢</b><span>欢乐接糖果</span></div><div class="play"></div></div>
+              <div class="event-card"><div class="calendar">19</div><div class="event-copy"><b>端午拼客节</b><span>粽情划龙舟</span></div><div class="play"></div></div>
+              <div class="event-card"><div class="calendar">暑</div><div class="event-copy"><b>暑期狂欢季</b><span>清凉切西瓜</span></div><div class="play"></div></div>
+              <div class="search">搜索 商场端午节集客消除玩法 <button>搜索</button></div>
+            </div>
+            <div class="category-strip">
+              <div class="category-card"><b>精选</b><span>爆款玩法推荐</span></div>
+              <div class="category-card"><b>消除类</b><span>爽快连消裂变</span></div>
+              <div class="category-card"><b>射击类</b><span>限时射击闯关</span></div>
+              <div class="category-card"><b>益智类</b><span>答题脑力引流</span></div>
+              <div class="category-card"><b>合成类</b><span>趣味合成养成</span></div>
+              <div class="category-card"><b>闯关类</b><span>大促过关解锁</span></div>
+              <div class="category-card"><b>反应类</b><span>手速极限抢券</span></div>
+              <div class="category-card"><b>动作类</b><span>微操跑酷闯关</span></div>
+            </div>
+            <div class="section-title"><b>精选玩法</b><div class="sort">综合排序⌄</div></div>
+            <div class="grid">
+              <div class="template"><div class="cover"></div><b>粽情端午龙舟竞渡</b><div class="tags"><span>动作类</span><span>国潮风</span></div></div>
+              <div class="template"><div class="cover"></div><b>全民狂热合成大西瓜</b><div class="tags"><span>合成类</span><span>可爱风</span></div></div>
+              <div class="template"><div class="cover"></div><b>端午太空行</b><div class="tags"><span>益智类</span><span>国潮风</span></div></div>
+              <div class="template"><div class="cover"></div><b>喜庆黄金接财神</b><div class="tags"><span>接物类</span><span>喜庆风</span></div></div>
+              <div class="template"><div class="cover"></div><b>中秋团圆月饼大合成</b><div class="tags"><span>合成类</span><span>节日</span></div></div>
+              <div class="template"><div class="cover"></div><b>新春年兽大作战</b><div class="tags"><span>闯关类</span><span>爆款</span></div></div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
