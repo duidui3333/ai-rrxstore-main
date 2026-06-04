@@ -82,13 +82,13 @@ export default function FeatureHighlights() {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }
               }}
-              className="group/card flex w-[96px] sm:w-[112px] flex-col items-center rounded-[26px] border border-white/80 bg-white/80 px-4 py-4 shadow-[0_8px_24px_rgba(37,99,235,0.06)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_14px_36px_rgba(37,99,235,0.10)] cursor-pointer relative"
+              className="group/card flex w-[96px] sm:w-[112px] flex-col items-center rounded-[26px] border border-white/55 bg-white/35 px-4 py-4 shadow-[0_8px_24px_rgba(37,99,235,0.06)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/50 hover:shadow-[0_14px_36px_rgba(37,99,235,0.10)] cursor-pointer relative"
             >
               <div className={cn(
-                "w-[52px] h-[52px] sm:w-[58px] sm:h-[58px] rounded-[18px] mb-3 flex items-center justify-center border border-slate-100 bg-white transition-transform duration-300 group-hover/card:scale-105 group-hover/card:border-slate-200 overflow-hidden",
+                "w-[52px] h-[52px] sm:w-[58px] sm:h-[58px] rounded-[18px] mb-3 flex items-center justify-center border border-white/70 bg-white/55 shadow-[0_8px_18px_rgba(15,23,42,0.06)] transition-transform duration-300 group-hover/card:scale-105 group-hover/card:border-white/90 overflow-hidden backdrop-blur-md",
                 feature.isAdd 
-                  ? "bg-slate-50" 
-                  : "bg-slate-50"
+                  ? "bg-white/45" 
+                  : "bg-white/55"
               )}>
                 <img
                   src={feature.icon}

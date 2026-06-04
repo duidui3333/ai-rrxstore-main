@@ -3,7 +3,16 @@ import FeatureHighlights from "./FeatureHighlights";
 import bannerBackground from "../assets/images/storebanner_bg_bitmap1.png";
 
 export default function StoreBanner({ palette }: { palette: any }) {
-  const hotSearches = ["儿童节", "端午节", "中秋节", "抽奖", "答题", "投票", "大转盘", "消消乐"];
+  const hotSearches = [
+    { text: "儿童节", emoji: "🎈" },
+    { text: "端午节", emoji: "🛶" },
+    { text: "中秋节", emoji: "🌕" },
+    { text: "抽奖", emoji: "🎁" },
+    { text: "答题", emoji: "📝" },
+    { text: "投票", emoji: "🗳️" },
+    { text: "大转盘", emoji: "🎡" },
+    { text: "消消乐", emoji: "🍬" },
+  ];
 
   return (
     <section className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-gradient-to-b from-white via-blue-50/65 to-[#F5F7FA] transition-colors duration-500">
@@ -19,7 +28,7 @@ export default function StoreBanner({ palette }: { palette: any }) {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.82),rgba(255,255,255,0.12)_42%,rgba(245,247,250,0.34)_100%)]" />
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent via-[#F5F7FA]/55 to-[#F5F7FA]" />
 
-      <div className="relative z-10 mx-auto flex min-h-[345px] w-full max-w-[1280px] flex-col items-center justify-center px-6 pb-20 pt-12 text-center lg:pt-16">
+      <div className="relative z-10 mx-auto flex min-h-[345px] w-full max-w-[1280px] flex-col items-center justify-center px-6 pb-[50px] pt-12 text-center lg:pt-16">
         <h1 className="text-[30px] font-black leading-tight tracking-[-0.02em] text-slate-950 sm:text-[42px]">
           搜索你想要的<span className="text-blue-600">模板</span>
         </h1>
@@ -36,14 +45,15 @@ export default function StoreBanner({ palette }: { palette: any }) {
           </button>
         </div>
 
-        <div className="mt-5 flex max-w-[820px] flex-wrap items-center justify-center gap-2 text-[12px] font-bold text-slate-500">
+        <div className="mt-5 mb-5 flex max-w-[820px] flex-wrap items-center justify-center gap-2 text-[12px] font-bold text-slate-500">
           <span className="mr-1 text-slate-600">热门搜索:</span>
           {hotSearches.map((term) => (
             <button
-              key={term}
+              key={term.text}
               className="rounded-full bg-white/60 px-3 py-1.5 text-slate-500 shadow-sm transition hover:bg-blue-50 hover:text-blue-600"
             >
-              {term}
+              <span className="mr-1.5">{term.emoji}</span>
+              {term.text}
             </button>
           ))}
         </div>

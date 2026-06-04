@@ -435,22 +435,6 @@ export default function Header({ isScrolled = false, currentRoute = "#" }: { isS
           </nav>
         
         <div className="ml-auto flex items-center gap-2 xl:gap-3 shrink-0">
-          {!isScrolled ? (
-            <button className="rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 ml-2">
-              进入工作台
-            </button>
-          ) : (
-            <div className="relative group/workspace">
-              <button className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors ml-1">
-                <LayoutDashboard className="h-4 w-4" />
-              </button>
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-slate-800 text-white text-[12px] font-medium rounded shadow-lg opacity-0 pointer-events-none group-hover/workspace:opacity-100 transition-opacity duration-100 whitespace-nowrap z-50">
-                进入工作台
-                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45"></div>
-              </div>
-            </div>
-          )}
-
           {isScrolled && (
             <div className="hidden md:block w-48 xl:w-56 animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="relative flex items-center w-full h-9 rounded-full bg-slate-100/80 px-3 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white border border-transparent focus-within:border-blue-500/30 transition-all">
@@ -463,6 +447,13 @@ export default function Header({ isScrolled = false, currentRoute = "#" }: { isS
               </div>
             </div>
           )}
+
+          <button className={cn(
+            "rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700",
+            isScrolled ? "ml-0" : "ml-2"
+          )}>
+            进入工作台
+          </button>
 
           <button className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 transition-colors ml-1">
             <Bell className="h-4 w-4" />

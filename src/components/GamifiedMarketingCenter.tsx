@@ -107,12 +107,37 @@ const matchSubPlaystyle = (template: any, subPlaystyle: string) => {
   return true;
 };
 
-const getTemplateImage = (templateId: string) => {
+const CATEGORY_IMAGE_OFFSETS: Record<string, number> = {
+  center: 0,
+  "消除类": 3,
+  "射击类": 7,
+  "益智类": 1,
+  "合成类": 9,
+  "闯关类": 5,
+  "反应类": 10,
+  "接物类": 2,
+  "动作类": 6,
+};
+
+const hashString = (value: string) => {
   let hash = 0;
-  for (let i = 0; i < templateId.length; i += 1) {
-    hash = (hash * 31 + templateId.charCodeAt(i)) >>> 0;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = ((hash << 5) - hash + value.charCodeAt(i)) >>> 0;
   }
-  return TEMPLATE_IMAGE_POOL[hash % TEMPLATE_IMAGE_POOL.length];
+  return hash >>> 0;
+};
+
+const getTemplateImage = (index: number, categoryKey = "center") => {
+  const offset = CATEGORY_IMAGE_OFFSETS[categoryKey] ?? 0;
+  return TEMPLATE_IMAGE_POOL[(offset + index) % TEMPLATE_IMAGE_POOL.length];
+};
+
+const shuffleBySeed = <T,>(items: T[], seedKey: string) => {
+  const seeded = items.map((item, index) => {
+    const key = `${seedKey}:${index}:${JSON.stringify(item)}`;
+    return { item, score: hashString(key) };
+  });
+  return seeded.sort((a, b) => a.score - b.score).map(entry => entry.item);
 };
 
 // Sidebar categories
@@ -1355,7 +1380,6 @@ const getTemplateStyle = (id: string) => {
 
 const categoryTabImageMap: Record<string, string> = {
   "全部": categoryTabAll,
-  "精选": categoryTabAll,
   "消除类": categoryTabElimination,
   "射击类": categoryTabShooting,
   "益智类": categoryTabPuzzle,
@@ -1881,7 +1905,7 @@ function GameCategoryTabs({
     <div className="relative z-20 -mt-9 flex justify-center px-6 sm:px-8 lg:px-10">
       <div className="inline-flex max-w-full items-center gap-2 overflow-x-auto rounded-3xl border border-slate-100 bg-white/95 p-3 shadow-[0_16px_40px_rgba(30,58,138,0.08)] backdrop-blur no-scrollbar">
         {items.map((item, index) => {
-          const iconImage = categoryTabImageMap[item.id] || categoryTabAll;
+          const iconImage = categoryTabImageMap[item.id] || categoryTabImageMap["全部"];
           const colors = categoryColorMap[item.id] || categoryColorMap["全部"];
           const isActive = active === item.id;
 
@@ -1919,13 +1943,17 @@ function GameCategoryTabs({
 
 function MarketingTemplateCard({
   item,
+  index,
+  categoryKey = "center",
   onDetail
 }: {
   key?: React.Key;
   item: any;
+  index: number;
+  categoryKey?: string;
   onDetail: () => void;
 }) {
-  const image = getTemplateImage(item.id);
+  const image = getTemplateImage(index, categoryKey);
   const badgeText = item.percentage >= 95 ? "热门" : "新品";
   const badgeClass = item.percentage >= 95 ? "bg-red-500" : "bg-blue-600";
   const tags = [item.type, item.scene === "全部" ? item.style : item.scene].filter(Boolean).slice(0, 2);
@@ -1976,6 +2004,7 @@ function TemplateGalleryPanel({
   title,
   subtitle,
   templates,
+  categoryKey = "center",
   selectedSort,
   onSortChange,
   onDetail,
@@ -1986,6 +2015,7 @@ function TemplateGalleryPanel({
   title: string;
   subtitle: string;
   templates: any[];
+  categoryKey?: string;
   selectedSort: string;
   onSortChange: (value: string) => void;
   onDetail: (id: string) => void;
@@ -1993,6 +2023,13 @@ function TemplateGalleryPanel({
   emptyDesc: string;
   onReset: () => void;
 }) {
+  const orderedTemplates = shuffleBySeed(templates, categoryKey);
+  const displayTemplates = orderedTemplates.length === 0
+    ? []
+    : orderedTemplates.length >= 16
+      ? orderedTemplates.slice(0, 16)
+      : Array.from({ length: 16 }, (_, index) => orderedTemplates[index % orderedTemplates.length]);
+
   return (
     <section className="px-6 pb-10 pt-6 sm:px-8 lg:px-10">
       <div className="rounded-[28px] bg-white/92 p-4 shadow-[0_18px_60px_rgba(30,58,138,0.08)] ring-1 ring-slate-100 sm:p-5">
@@ -2013,12 +2050,14 @@ function TemplateGalleryPanel({
           </div>
         </div>
 
-        {templates.length > 0 ? (
-          <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            {templates.slice(0, 8).map((item) => (
+        {displayTemplates.length > 0 ? (
+          <div className="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(230px,1fr))]">
+            {displayTemplates.map((item, index) => (
               <MarketingTemplateCard
-                key={item.id}
+                key={`${item.id}-${index}`}
                 item={item}
+                index={index}
+                categoryKey={categoryKey}
                 onDetail={() => onDetail(item.id)}
               />
             ))}
@@ -3095,10 +3134,11 @@ export default function GamifiedMarketingCenter() {
                   </h3>
 
                   <div className="grid grid-cols-2 gap-4">
-                    {TEMPLATES_DATA.filter(t => t.id !== detailTemplateId).slice(0, 4).map((item) => (
+                    {TEMPLATES_DATA.filter(t => t.id !== detailTemplateId).slice(0, 4).map((item, index) => (
                       <MarketingTemplateCard
                         key={item.id}
                         item={item}
+                        index={index}
                         onDetail={() => handleSelectTemplateDetail(item.id)}
                       />
                     ))}
@@ -3184,6 +3224,7 @@ export default function GamifiedMarketingCenter() {
                     title={activeSidebar + "模板"}
                     subtitle={"共 " + categoryFiltered.length.toLocaleString() + " 个模板"}
                     templates={categoryFiltered}
+                    categoryKey={activeSidebar}
                     selectedSort={selectedSort}
                     onSortChange={setSelectedSort}
                     onDetail={handleSelectTemplateDetail}

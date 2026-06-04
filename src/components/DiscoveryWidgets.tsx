@@ -99,6 +99,7 @@ export default function DiscoveryWidgets() {
     { name: "五一劳动节狂欢大作战", tag: "游戏", views: "3.2w浏览" },
     { name: "母亲节康乃馨抽盲盒", tag: "营销", views: "1.5w浏览" },
     { name: "企业春招性格测试题库", tag: "答题", views: "8.9k浏览" },
+    { name: "AI趣味答题闯关赛", tag: "答题", views: "6.4k浏览" },
     { name: "立夏节气动态海报素材", tag: "设计", views: "5.1k浏览" },
     { name: "周年庆祝微官网搭建", tag: "搭建", views: "1.2w浏览" },
     { name: "六一儿童节趣味问答赛", tag: "答题", views: "4.5k浏览" },
@@ -113,7 +114,7 @@ export default function DiscoveryWidgets() {
     { user: "张**", action: "编辑了", template: "端午节赛龙舟游戏" },
   ];
 
-  const [newTemplates, setNewTemplates] = useState(allTemplates.slice(0, 3));
+  const [newTemplates, setNewTemplates] = useState(allTemplates.slice(0, 4));
   const [feed, setFeed] = useState(allFeed.slice(0, 3).map(f => ({ ...f, time: "刚刚更新" })));
   const accessItems = [
     {
@@ -153,7 +154,7 @@ export default function DiscoveryWidgets() {
     const timer = setInterval(() => {
       setNewTemplates(prev => {
         const shuffled = [...allTemplates].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, 3);
+        return shuffled.slice(0, 4);
       });
       
       setFeed(prev => {
@@ -170,7 +171,7 @@ export default function DiscoveryWidgets() {
       
       {/* Widget 1: Hot Calendar with Images (Spans 2 columns on lg, 3 on xl) */}
       <div className="rounded-2xl bg-white p-4 flex flex-col overflow-hidden lg:col-span-2 xl:col-span-2 2xl:col-span-3">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-2.5">
           <div className="mt-[5px] flex items-center gap-2">
             <CalendarDays className="h-5 w-5 text-orange-500" />
             <h3 className="font-bold text-slate-800 text-[15px] leading-none">热点营销日历</h3>
@@ -178,20 +179,20 @@ export default function DiscoveryWidgets() {
           <button className="text-xs text-slate-500 hover:text-blue-600 flex items-center gap-1">更多节点 <ArrowRight className="h-3 w-3" /></button>
         </div>
         
-        <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-3">
+        <div className="mt-1.5 grid grid-cols-1 gap-2 sm:grid-cols-2 2xl:grid-cols-3">
           {events.map((evt, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => handleCalendarClick(evt.targetId)}
-              className={`w-full flex items-center gap-4 p-3.5 rounded-2xl border bg-gradient-to-br shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-transparent relative overflow-hidden group/card cursor-pointer text-left ${evt.bgClass}`}
+              className={`w-full flex items-center gap-4 p-3 rounded-2xl border bg-gradient-to-br shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-transparent relative overflow-hidden group/card cursor-pointer text-left ${evt.bgClass}`}
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white/30 to-transparent rounded-full pointer-events-none opacity-40" />
               <div className="absolute -bottom-1 -right-1 text-5xl opacity-10 select-none group-hover/card:scale-130 transition-transform duration-500 pointer-events-none font-sans font-black">
                 {evt.decor}
               </div>
 
-              <div className="w-12 h-14 rounded-xl border border-slate-200/50 overflow-hidden flex flex-col shrink-0 bg-white shadow-xs select-none">
+              <div className="w-12 h-[52px] rounded-xl border border-slate-200/50 overflow-hidden flex flex-col shrink-0 bg-white shadow-xs select-none">
                 <div className={`text-white text-[10px] font-extrabold text-center py-0.5 uppercase tracking-wider font-mono ${evt.headerBg}`}>
                   {evt.month}
                 </div>
@@ -200,15 +201,15 @@ export default function DiscoveryWidgets() {
                 </div>
               </div>
 
-              <div className="flex flex-col min-w-[130px] flex-1">
+              <div className="flex min-w-0 flex-col flex-1">
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md leading-none shadow-xs uppercase ${evt.textClass}`}>
                     {evt.tag}
                   </span>
                 </div>
-                <span className="text-[14px] font-black text-slate-800 mt-1.5 leading-none">{evt.title}</span>
-                <div className="flex items-center gap-1.5 mt-1 leading-none">
-                  <span className="text-[11px] text-slate-500 font-extrabold flex items-center gap-0.5">
+                <span className="truncate text-[14px] font-black text-slate-800 mt-1 leading-none">{evt.title}</span>
+                <div className="flex items-center gap-1.5 mt-0.5 leading-none">
+                  <span className="truncate text-[11px] text-slate-500 font-extrabold flex items-center gap-0.5">
                     <Gift className="w-3 h-3 text-slate-400" />
                     {evt.gameName}
                   </span>
@@ -233,12 +234,9 @@ export default function DiscoveryWidgets() {
             </div>
             <h3 className="font-bold text-orange-950 text-sm">最新上架模板</h3>
           </div>
-          <span className="flex items-center px-1.5 py-0.5 text-[10px] font-black text-rose-600 bg-white rounded border border-rose-100 shadow-sm animate-pulse tracking-wider">
-            NEW
-          </span>
         </div>
         
-        <div className="space-y-2.5 flex-1 pt-1 relative z-10">
+        <div className="space-y-2 flex-1 pt-0.5 relative z-10">
           {newTemplates.map((item, idx) => (
             <div key={idx} className="group animate-in fade-in slide-in-from-bottom-2 duration-500 cursor-pointer flex items-center justify-between bg-white/60 hover:bg-white px-2.5 py-2 rounded-xl transition-all border border-transparent">
               <div className="flex items-center gap-2 overflow-hidden pr-2">
@@ -273,9 +271,6 @@ export default function DiscoveryWidgets() {
             </div>
             <h3 className="font-bold text-indigo-950 text-sm">实时创作动态</h3>
           </div>
-          <span className="flex items-center px-1.5 py-0.5 text-[10px] font-black text-emerald-600 bg-white rounded border border-emerald-100 shadow-sm animate-pulse tracking-wider">
-            LIVE
-          </span>
         </div>
 
         <div className="flex-1 overflow-hidden relative z-10 pt-1">
@@ -326,15 +321,15 @@ export default function DiscoveryWidgets() {
           </div>
         </div>
 
-        <div className="space-y-3 flex-1 pt-1 relative z-10">
+        <div className="space-y-2.5 flex-1 pt-1 relative z-10">
           {accessItems.map((item) => {
             const Icon = item.icon;
             return (
               <button
                 key={item.title}
-                className={`flex w-full items-center gap-3 rounded-2xl border border-white/70 bg-gradient-to-r ${item.cardBg} px-3 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(148,163,184,0.16)]`}
+                className={`flex h-16 w-full items-center gap-3 rounded-2xl border border-white/70 bg-gradient-to-r ${item.cardBg} px-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(148,163,184,0.16)]`}
               >
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${item.iconBg}`}>
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl ${item.iconBg}`}>
                   <Icon className={`h-5 w-5 ${item.iconColor}`} />
                 </div>
                 <span className="min-w-0 flex-1">
@@ -344,13 +339,6 @@ export default function DiscoveryWidgets() {
               </button>
             );
           })}
-        </div>
-
-        <div className="mt-3 pt-3 border-t border-sky-200/60 relative z-10">
-          <div className="flex items-center gap-1.5 text-xs text-sky-900/60 font-medium">
-            <Zap className="h-3.5 w-3.5 text-sky-500" />
-            多端接入 <span className="text-sky-600 font-black text-[13px]">3</span> 套
-          </div>
         </div>
       </div>
 
