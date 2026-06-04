@@ -107,7 +107,13 @@ const matchSubPlaystyle = (template: any, subPlaystyle: string) => {
   return true;
 };
 
-const getTemplateImage = (_templateId: string, index: number) => TEMPLATE_IMAGE_POOL[index % TEMPLATE_IMAGE_POOL.length];
+const getTemplateImage = (templateId: string) => {
+  let hash = 0;
+  for (let i = 0; i < templateId.length; i += 1) {
+    hash = (hash * 31 + templateId.charCodeAt(i)) >>> 0;
+  }
+  return TEMPLATE_IMAGE_POOL[hash % TEMPLATE_IMAGE_POOL.length];
+};
 
 // Sidebar categories
 const SIDEBAR_ITEMS = [
@@ -1913,15 +1919,13 @@ function GameCategoryTabs({
 
 function MarketingTemplateCard({
   item,
-  index,
   onDetail
 }: {
   key?: React.Key;
   item: any;
-  index: number;
   onDetail: () => void;
 }) {
-  const image = getTemplateImage(item.id, index);
+  const image = getTemplateImage(item.id);
   const badgeText = item.percentage >= 95 ? "热门" : "新品";
   const badgeClass = item.percentage >= 95 ? "bg-red-500" : "bg-blue-600";
   const tags = [item.type, item.scene === "全部" ? item.style : item.scene].filter(Boolean).slice(0, 2);
@@ -2010,12 +2014,11 @@ function TemplateGalleryPanel({
         </div>
 
         {templates.length > 0 ? (
-          <div className="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(230px,1fr))]">
-            {templates.map((item, index) => (
+          <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            {templates.slice(0, 8).map((item) => (
               <MarketingTemplateCard
                 key={item.id}
                 item={item}
-                index={index}
                 onDetail={() => onDetail(item.id)}
               />
             ))}
@@ -3092,11 +3095,10 @@ export default function GamifiedMarketingCenter() {
                   </h3>
 
                   <div className="grid grid-cols-2 gap-4">
-                    {TEMPLATES_DATA.filter(t => t.id !== detailTemplateId).slice(0, 4).map((item, index) => (
+                    {TEMPLATES_DATA.filter(t => t.id !== detailTemplateId).slice(0, 4).map((item) => (
                       <MarketingTemplateCard
                         key={item.id}
                         item={item}
-                        index={index}
                         onDetail={() => handleSelectTemplateDetail(item.id)}
                       />
                     ))}
