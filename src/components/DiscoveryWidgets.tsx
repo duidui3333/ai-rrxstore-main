@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CalendarDays, ArrowRight, Zap, Target, Activity, Clock, Flame } from "lucide-react";
+import { CalendarDays, ArrowRight, Zap, Target, Activity, Clock, Flame, Gift, Plug2, MessagesSquare, Smartphone, Code } from "lucide-react";
 import imgTemplateCover1 from "../assets/images/marketing_template_cover_1_1779935600707.png";
 import imgTemplateCover2 from "../assets/images/marketing_template_cover_2_1779935619140.png";
 import imgTemplateCover3 from "../assets/images/marketing_template_cover_3_1779935640170.png";
@@ -9,12 +9,90 @@ import imgAction from "../assets/images/cat_action_1779523229602.png";
 
 export default function DiscoveryWidgets() {
   const events = [
-    { date: "5月1日", name: "劳动节", day: "星期五", color: "text-[#3D63BB]", subColor: "text-[#6C8DCE]", bg: "from-[#eef3fb] to-[#f8faff]", img: imgTemplateCover1 },
-    { date: "5月4日", name: "青年节", day: "星期一", color: "text-[#069D7B]", subColor: "text-[#5CB9A4]", bg: "from-[#ecf9f4] to-[#f7fdfb]", img: imgTemplateCover2 },
-    { date: "5月5日", name: "立夏", day: "星期二", color: "text-[#378B3F]", subColor: "text-[#6FB175]", bg: "from-[#eff7f0] to-[#f8fbf8]", img: imgTemplateCover3 },
-    { date: "5月10日", name: "母亲节", day: "星期日", color: "text-[#DF427C]", subColor: "text-[#E982A9]", bg: "from-[#fdf1f5] to-[#fef8fa]", img: imgAction },
-    { date: "5月20日", name: "520表白日", day: "星期三", color: "text-[#F15B8A]", subColor: "text-[#F28BAA]", bg: "from-[#fff0f5] to-[#fff8fb]", img: imgEnvelopeClean },
-    { date: "6月1日", name: "儿童节", day: "星期一", color: "text-[#2E7AD7]", subColor: "text-[#6F97E6]", bg: "from-[#eff6ff] to-[#f7fbff]", img: imgWheelClean },
+    {
+      month: "5月",
+      day: "01",
+      title: "劳动节",
+      gameName: "致敬奋斗者",
+      tag: "节日热点",
+      targetId: "may1",
+      decor: "🏅🛠️",
+      img: imgTemplateCover1,
+      bgClass: "from-blue-50/90 to-white hover:to-blue-50/20 border-blue-100/80 hover:border-blue-300 hover:shadow-[0_12px_24px_rgba(59,130,246,0.12)]",
+      textClass: "text-blue-600 bg-blue-100/70",
+      headerBg: "bg-gradient-to-r from-blue-500 to-indigo-500",
+      btnClass: "bg-blue-500 hover:bg-blue-600 shadow-md shadow-blue-100 hover:shadow-blue-300/50",
+    },
+    {
+      month: "5月",
+      day: "04",
+      title: "青年节",
+      gameName: "青春能量派",
+      tag: "品牌互动",
+      targetId: "may4",
+      decor: "🎤⚡",
+      img: imgTemplateCover2,
+      bgClass: "from-emerald-50/90 to-white hover:to-emerald-50/20 border-emerald-100/80 hover:border-emerald-300 hover:shadow-[0_12px_24px_rgba(16,185,129,0.12)]",
+      textClass: "text-emerald-700 bg-emerald-100/70",
+      headerBg: "bg-gradient-to-r from-emerald-600 to-teal-600",
+      btnClass: "bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-100 hover:shadow-emerald-300/50",
+    },
+    {
+      month: "5月",
+      day: "05",
+      title: "立夏",
+      gameName: "夏日上新季",
+      tag: "节气营销",
+      targetId: "may4",
+      decor: "🌿☀️",
+      img: imgTemplateCover3,
+      bgClass: "from-lime-50/90 to-white hover:to-lime-50/20 border-lime-100/80 hover:border-lime-300 hover:shadow-[0_12px_24px_rgba(132,204,22,0.12)]",
+      textClass: "text-lime-700 bg-lime-100/70",
+      headerBg: "bg-gradient-to-r from-lime-600 to-emerald-500",
+      btnClass: "bg-lime-600 hover:bg-lime-700 shadow-md shadow-lime-100 hover:shadow-lime-300/50",
+    },
+    {
+      month: "5月",
+      day: "10",
+      title: "母亲节",
+      gameName: "感恩花礼季",
+      tag: "温情促销",
+      targetId: "may12",
+      decor: "🌷🎁",
+      img: imgAction,
+      bgClass: "from-rose-50/90 to-white hover:to-rose-50/20 border-rose-100/80 hover:border-rose-300 hover:shadow-[0_12px_24px_rgba(244,63,94,0.12)]",
+      textClass: "text-rose-600 bg-rose-100/70",
+      headerBg: "bg-gradient-to-r from-rose-500 to-pink-500",
+      btnClass: "bg-rose-500 hover:bg-rose-600 shadow-md shadow-rose-100 hover:shadow-rose-300/50",
+    },
+    {
+      month: "5月",
+      day: "20",
+      title: "520表白日",
+      gameName: "浪漫告白季",
+      tag: "节日互动",
+      targetId: "may20",
+      decor: "💌🌹",
+      img: imgEnvelopeClean,
+      bgClass: "from-fuchsia-50/90 to-white hover:to-fuchsia-50/20 border-fuchsia-100/80 hover:border-fuchsia-300 hover:shadow-[0_12px_24px_rgba(217,70,239,0.12)]",
+      textClass: "text-fuchsia-600 bg-fuchsia-100/70",
+      headerBg: "bg-gradient-to-r from-fuchsia-500 to-pink-500",
+      btnClass: "bg-fuchsia-500 hover:bg-fuchsia-600 shadow-md shadow-fuchsia-100 hover:shadow-fuchsia-300/50",
+    },
+    {
+      month: "6月",
+      day: "01",
+      title: "儿童节",
+      gameName: "欢乐接糖果",
+      tag: "童心大促",
+      targetId: "jun1",
+      decor: "🍬🎈",
+      img: imgWheelClean,
+      bgClass: "from-pink-50/90 to-white hover:to-pink-50/20 border-pink-100/80 hover:border-pink-300 hover:shadow-[0_12px_24px_rgba(236,72,153,0.12)]",
+      textClass: "text-pink-600 bg-pink-100/70",
+      headerBg: "bg-gradient-to-r from-pink-500 to-fuchsia-500",
+      btnClass: "bg-pink-500 hover:bg-pink-600 shadow-md shadow-pink-100 hover:shadow-pink-300/50",
+    },
   ];
 
   const allTemplates = [
@@ -37,6 +115,38 @@ export default function DiscoveryWidgets() {
 
   const [newTemplates, setNewTemplates] = useState(allTemplates.slice(0, 3));
   const [feed, setFeed] = useState(allFeed.slice(0, 3).map(f => ({ ...f, time: "刚刚更新" })));
+  const accessItems = [
+    {
+      title: "微信小程序对接",
+      desc: "无需开发 极速嵌接",
+      icon: MessagesSquare,
+      iconColor: "text-emerald-600",
+      iconBg: "bg-emerald-100/90",
+      cardBg: "from-emerald-50 to-green-50/80",
+    },
+    {
+      title: "APP 集成安全方案",
+      desc: "iOS & Android 无缝嵌入",
+      icon: Smartphone,
+      iconColor: "text-violet-600",
+      iconBg: "bg-violet-100/90",
+      cardBg: "from-violet-50 to-fuchsia-50/70",
+    },
+    {
+      title: "活动接口打通",
+      desc: "资产互通 数据同步",
+      icon: Code,
+      iconColor: "text-amber-600",
+      iconBg: "bg-amber-100/90",
+      cardBg: "from-amber-50 to-orange-50/75",
+    },
+  ];
+
+  const handleCalendarClick = (targetId: string) => {
+    const section = document.getElementById(targetId);
+    if (!section) return;
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   useEffect(() => {
     // 每分钟自动刷新更新内容
@@ -56,34 +166,55 @@ export default function DiscoveryWidgets() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
       
       {/* Widget 1: Hot Calendar with Images (Spans 2 columns on lg, 3 on xl) */}
-      <div className="lg:col-span-2 xl:col-span-3 bg-white rounded-2xl p-4 flex flex-col overflow-hidden">
+      <div className="rounded-2xl bg-white p-4 flex flex-col overflow-hidden lg:col-span-2 xl:col-span-2 2xl:col-span-3">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <CalendarDays className="h-4 w-4 text-orange-500" />
-            <h3 className="font-bold text-slate-800 text-sm">热点营销日历</h3>
+          <div className="mt-[5px] flex items-center gap-2">
+            <CalendarDays className="h-5 w-5 text-orange-500" />
+            <h3 className="font-bold text-slate-800 text-[15px] leading-none">热点营销日历</h3>
           </div>
           <button className="text-xs text-slate-500 hover:text-blue-600 flex items-center gap-1">更多节点 <ArrowRight className="h-3 w-3" /></button>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 mt-2">
+        <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-3">
           {events.map((evt, idx) => (
-            <div key={idx} className={`relative rounded-xl overflow-hidden bg-gradient-to-br ${evt.bg} p-3 pb-2 h-[88px] flex group transition-all hover:shadow-md cursor-pointer border border-transparent hover:border-slate-100`}>
-              <div className="flex flex-col flex-1 justify-center relative z-10 pr-[72px] pl-2">
-                <div className={`text-lg font-bold ${evt.color} mb-1 tracking-wider truncate`}>{evt.name}</div>
-                <div className={`text-[12px] font-medium ${evt.subColor} flex items-center gap-1.5 truncate`}>
-                  <span>{evt.date}</span>
-                  <span>{evt.day}</span>
+            <button
+              key={idx}
+              type="button"
+              onClick={() => handleCalendarClick(evt.targetId)}
+              className={`w-full flex items-center gap-4 p-3.5 rounded-2xl border bg-gradient-to-br shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-transparent relative overflow-hidden group/card cursor-pointer text-left ${evt.bgClass}`}
+            >
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white/30 to-transparent rounded-full pointer-events-none opacity-40" />
+              <div className="absolute -bottom-1 -right-1 text-5xl opacity-10 select-none group-hover/card:scale-130 transition-transform duration-500 pointer-events-none font-sans font-black">
+                {evt.decor}
+              </div>
+
+              <div className="w-12 h-14 rounded-xl border border-slate-200/50 overflow-hidden flex flex-col shrink-0 bg-white shadow-xs select-none">
+                <div className={`text-white text-[10px] font-extrabold text-center py-0.5 uppercase tracking-wider font-mono ${evt.headerBg}`}>
+                  {evt.month}
+                </div>
+                <div className="flex-grow flex items-center justify-center text-slate-800 text-lg font-black font-mono leading-none">
+                  {evt.day}
                 </div>
               </div>
-              
-              {/* The image container */}
-              <div className="absolute right-4 bottom-0 w-[64px] h-[74px] bg-white rounded-t-xl p-1 pb-0 shadow-sm group-hover:-translate-y-1 transition-transform duration-300 z-20">
-                <img src={evt.img} className="w-full h-full object-cover rounded-t-lg bg-slate-100" alt={evt.name} />
+
+              <div className="flex flex-col min-w-[130px] flex-1">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md leading-none shadow-xs uppercase ${evt.textClass}`}>
+                    {evt.tag}
+                  </span>
+                </div>
+                <span className="text-[14px] font-black text-slate-800 mt-1.5 leading-none">{evt.title}</span>
+                <div className="flex items-center gap-1.5 mt-1 leading-none">
+                  <span className="text-[11px] text-slate-500 font-extrabold flex items-center gap-0.5">
+                    <Gift className="w-3 h-3 text-slate-400" />
+                    {evt.gameName}
+                  </span>
+                </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
@@ -177,6 +308,49 @@ export default function DiscoveryWidgets() {
             今日创作 <span className="text-indigo-600 font-black text-[13px]">4.5W+</span> 份
           </div>
           <button className="text-[11px] text-indigo-600 font-bold hover:underline flex items-center">去查看 <ArrowRight className="w-3 h-3 ml-0.5"/></button>
+        </div>
+      </div>
+
+      <div className="relative rounded-2xl bg-gradient-to-b from-blue-100 via-sky-50/35 to-white p-4 flex flex-col overflow-hidden">
+        <div className="absolute top-0 right-0 opacity-[0.03] transform translate-x-2 -translate-y-2 pointer-events-none">
+          <Plug2 className="w-24 h-24 text-sky-600" />
+        </div>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent via-white/70 to-white" />
+
+        <div className="mb-4 relative z-10">
+          <div className="flex items-center gap-2">
+            <div className="bg-gradient-to-br from-sky-400 to-cyan-500 w-6 h-6 rounded-full flex items-center justify-center shadow-sm">
+              <Plug2 className="h-3.5 w-3.5 text-white" />
+            </div>
+            <h3 className="font-bold text-sky-950 text-sm">接入方案</h3>
+          </div>
+        </div>
+
+        <div className="space-y-3 flex-1 pt-1 relative z-10">
+          {accessItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.title}
+                className={`flex w-full items-center gap-3 rounded-2xl border border-white/70 bg-gradient-to-r ${item.cardBg} px-3 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(148,163,184,0.16)]`}
+              >
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${item.iconBg}`}>
+                  <Icon className={`h-5 w-5 ${item.iconColor}`} />
+                </div>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[13px] font-bold text-slate-800">{item.title}</span>
+                  <span className="block text-[10px] font-semibold text-slate-400">{item.desc}</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-3 pt-3 border-t border-sky-200/60 relative z-10">
+          <div className="flex items-center gap-1.5 text-xs text-sky-900/60 font-medium">
+            <Zap className="h-3.5 w-3.5 text-sky-500" />
+            多端接入 <span className="text-sky-600 font-black text-[13px]">3</span> 套
+          </div>
         </div>
       </div>
 

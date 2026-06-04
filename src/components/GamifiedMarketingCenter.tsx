@@ -32,6 +32,15 @@ import templateImage9 from "../assets/images/template_image_09.png";
 import templateImage10 from "../assets/images/template_image_10.png";
 import templateImage11 from "../assets/images/template_image_11.png";
 import templateImage12 from "../assets/images/template_image_12.png";
+import categoryTabAll from "../assets/images/category-tabs/tab_all.png";
+import categoryTabElimination from "../assets/images/category-tabs/tab_elimination.png";
+import categoryTabShooting from "../assets/images/category-tabs/tab_shooting.png";
+import categoryTabPuzzle from "../assets/images/category-tabs/tab_puzzle.png";
+import categoryTabSynthesis from "../assets/images/category-tabs/tab_synthesis.png";
+import categoryTabStage from "../assets/images/category-tabs/tab_stage.png";
+import categoryTabReaction from "../assets/images/category-tabs/tab_reaction.png";
+import categoryTabCatching from "../assets/images/category-tabs/tab_catching.png";
+import categoryTabAction from "../assets/images/category-tabs/tab_action.png";
 
 
 // Dictionary mapping gameplay categories to sub-playstyles, banners, and descriptions
@@ -1338,17 +1347,17 @@ const getTemplateStyle = (id: string) => {
   return stylesMap[id] || { bg: "from-[#eef3fb] to-[#f8faff]", text: "text-[#3D63BB]", border: "border-[#e2eaf8]" };
 };
 
-const categoryIconMap: Record<string, React.ElementType> = {
-  "全部": LayoutTemplate,
-  "精选": LayoutTemplate,
-  "消除类": Zap,
-  "射击类": Shield,
-  "益智类": HelpCircle,
-  "合成类": Trophy,
-  "闯关类": Stars,
-  "反应类": Zap,
-  "接物类": Award,
-  "动作类": Sparkles
+const categoryTabImageMap: Record<string, string> = {
+  "全部": categoryTabAll,
+  "精选": categoryTabAll,
+  "消除类": categoryTabElimination,
+  "射击类": categoryTabShooting,
+  "益智类": categoryTabPuzzle,
+  "合成类": categoryTabSynthesis,
+  "闯关类": categoryTabStage,
+  "反应类": categoryTabReaction,
+  "接物类": categoryTabCatching,
+  "动作类": categoryTabAction
 };
 
 const categoryColorMap: Record<string, { bg: string; icon: string; active: string }> = {
@@ -1866,7 +1875,7 @@ function GameCategoryTabs({
     <div className="relative z-20 -mt-9 flex justify-center px-6 sm:px-8 lg:px-10">
       <div className="inline-flex max-w-full items-center gap-2 overflow-x-auto rounded-3xl border border-slate-100 bg-white/95 p-3 shadow-[0_16px_40px_rgba(30,58,138,0.08)] backdrop-blur no-scrollbar">
         {items.map((item, index) => {
-          const Icon = categoryIconMap[item.id] || Sparkles;
+          const iconImage = categoryTabImageMap[item.id] || categoryTabAll;
           const colors = categoryColorMap[item.id] || categoryColorMap["全部"];
           const isActive = active === item.id;
 
@@ -1880,10 +1889,15 @@ function GameCategoryTabs({
               )}
             >
               <span className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-full",
-                isActive ? "bg-white/18 text-white" : `${colors.bg} ${colors.icon}`
+                "flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full",
+                isActive ? "bg-white/16" : colors.bg
               )}>
-                <Icon className="h-4 w-4" />
+                <img
+                  src={iconImage}
+                  alt={item.name}
+                  className="h-full w-full scale-[1.06] rounded-full object-cover object-center"
+                  draggable={false}
+                />
               </span>
               <span>{item.name}</span>
               {index < items.length - 1 && !isActive && (

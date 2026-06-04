@@ -1,6 +1,18 @@
 import { Play, Eye, Heart, ScanLine, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "../lib/utils";
+import templateImage1 from "../assets/images/template_image_01.png";
+import templateImage2 from "../assets/images/template_image_02.png";
+import templateImage3 from "../assets/images/template_image_03.png";
+import templateImage4 from "../assets/images/template_image_04.png";
+import templateImage5 from "../assets/images/template_image_05.png";
+import templateImage6 from "../assets/images/template_image_06.png";
+import templateImage7 from "../assets/images/template_image_07.png";
+import templateImage8 from "../assets/images/template_image_08.png";
+import templateImage9 from "../assets/images/template_image_09.png";
+import templateImage10 from "../assets/images/template_image_10.png";
+import templateImage11 from "../assets/images/template_image_11.png";
+import templateImage12 from "../assets/images/template_image_12.png";
 
 interface Template {
   id: string;
@@ -20,6 +32,21 @@ const colors = [
   "from-purple-400 to-indigo-400",
   "from-orange-400 to-amber-400",
   "from-indigo-400 to-blue-500",
+];
+
+const TEMPLATE_IMAGE_POOL = [
+  templateImage1,
+  templateImage2,
+  templateImage3,
+  templateImage4,
+  templateImage5,
+  templateImage6,
+  templateImage7,
+  templateImage8,
+  templateImage9,
+  templateImage10,
+  templateImage11,
+  templateImage12,
 ];
 
 export default function TemplateGrid({ category, limit, layout = 'grid' }: { category?: string, limit?: number, layout?: 'grid' | 'row' }) {
@@ -50,6 +77,8 @@ export default function TemplateGrid({ category, limit, layout = 'grid' }: { cat
       isHot: i % 5 === 0,
     };
   });
+
+  const getTemplateImage = (index: number) => TEMPLATE_IMAGE_POOL[index % TEMPLATE_IMAGE_POOL.length];
 
   const toggleFavorite = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
@@ -84,10 +113,20 @@ export default function TemplateGrid({ category, limit, layout = 'grid' }: { cat
     }
   };
 
-  const renderCard = (tpl: Template) => (
+  const renderCard = (tpl: Template, index: number) => {
+    const image = getTemplateImage(index);
+
+    return (
     <div key={tpl.id} className={cn("group flex flex-col bg-white rounded-xl transition-all duration-300 hover:-translate-y-1", layout === 'row' ? "min-w-[170px] w-[170px] sm:min-w-[200px] sm:w-[200px] lg:min-w-[210px] lg:w-[210px] shrink-0 snap-start" : "w-full")}>
       <div className={`relative aspect-[3/5] w-full overflow-hidden rounded-xl bg-gradient-to-br ${tpl.color}`}>
-        <div className="absolute inset-0 opacity-20"></div>
+        <img
+          src={image}
+          alt={tpl.title}
+          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          draggable={false}
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/30" />
         
         {tpl.isHot && (
           <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-red-500/90 text-white text-[10px] font-bold rounded z-10 backdrop-blur-sm">
@@ -150,7 +189,8 @@ export default function TemplateGrid({ category, limit, layout = 'grid' }: { cat
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   if (layout === 'row') {
     return (

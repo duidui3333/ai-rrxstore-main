@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import Header from "./components/Header";
 import StoreBanner from "./components/StoreBanner";
-import ThemeBar from "./components/ThemeBar";
 import DiscoveryWidgets from "./components/DiscoveryWidgets";
 import TemplateGrid from "./components/TemplateGrid";
 import PreferenceModal from "./components/PreferenceModal";
@@ -42,7 +41,7 @@ const ModuleSection: React.FC<{
   const [activeTag, setActiveTag] = useState(module.tags[0]);
 
   return (
-    <div className="bg-white rounded-2xl p-5 lg:p-6 overflow-hidden transition-shadow duration-300 hover:shadow-lg">
+    <section id={module.id} className="bg-white rounded-2xl p-5 lg:p-6 overflow-hidden transition-shadow duration-300 hover:shadow-lg scroll-mt-24">
       <div className="flex items-center justify-between mb-5">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full max-w-[calc(100%-80px)] xl:max-w-none">
           <div className="flex items-center gap-2 shrink-0 relative">
@@ -89,7 +88,7 @@ const ModuleSection: React.FC<{
         </button>
       </div>
       <TemplateGrid category={`${module.name} - ${activeTag}`} limit={10} layout="row" />
-    </div>
+    </section>
   );
 }
 
@@ -342,7 +341,6 @@ export default function App() {
             <div className="w-full space-y-6">
               
               <StoreBanner palette={palette} />
-              <ThemeBar activeTheme={activeTheme} onThemeChange={setActiveTheme} />
               <DiscoveryWidgets />
               
               {/* The Core Marketplace Container */}
