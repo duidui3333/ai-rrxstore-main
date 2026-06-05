@@ -20,6 +20,7 @@ import imgAction from "../assets/images/cat_action_1779523229602.png";
 import imgTemplateCover1 from "../assets/images/marketing_template_cover_1_1779935600707.png";
 import imgTemplateCover2 from "../assets/images/marketing_template_cover_2_1779935619140.png";
 import imgTemplateCover3 from "../assets/images/marketing_template_cover_3_1779935640170.png";
+import shareQrReference from "../assets/images/share_qr_reference.png";
 import templateImage1 from "../assets/images/template_image_01.png";
 import templateImage2 from "../assets/images/template_image_02.png";
 import templateImage3 from "../assets/images/template_image_03.png";
@@ -38,6 +39,7 @@ import categoryTabShooting from "../assets/images/category-tabs/tab_shooting.png
 import categoryTabPuzzle from "../assets/images/category-tabs/tab_puzzle.png";
 import categoryTabSynthesis from "../assets/images/category-tabs/tab_synthesis.png";
 import categoryTabStage from "../assets/images/category-tabs/tab_stage.png";
+import gameDetailPreviewReference from "../assets/images/game_detail_preview_reference.png";
 import categoryTabReaction from "../assets/images/category-tabs/tab_reaction.png";
 import categoryTabCatching from "../assets/images/category-tabs/tab_catching.png";
 import categoryTabAction from "../assets/images/category-tabs/tab_action.png";
@@ -2051,7 +2053,7 @@ function TemplateGalleryPanel({
         </div>
 
         {displayTemplates.length > 0 ? (
-          <div className="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(230px,1fr))]">
+          <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
             {displayTemplates.map((item, index) => (
               <MarketingTemplateCard
                 key={`${item.id}-${index}`}
@@ -2641,10 +2643,10 @@ export default function GamifiedMarketingCenter() {
                   onClick={() => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现游戏金币、成长值、优惠券等道具资产与核心用户库的实时结算流。")}
                   className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
                 >
-                  <Code className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <Code className="w-4 h-4 text-amber-500 shrink-0" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate">活动接口打通</span>
-                    <span className="block text-[10px] font-semibold text-emerald-600/80 normal-case tracking-normal">资产互通 数据同步</span>
+                    <span className="block text-[10px] font-semibold text-amber-600/80 normal-case tracking-normal">资产互通 数据同步</span>
                   </span>
                 </button>
               </div>
@@ -2717,10 +2719,10 @@ export default function GamifiedMarketingCenter() {
                 onClick={() => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现游戏金币、成长值、优惠券等道具资产与核心用户库的实时结算流。")}
                 className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
               >
-                <Code className="w-4 h-4 text-emerald-600" />
+                <Code className="w-4 h-4 text-amber-500" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate">活动接口打通</span>
-                  <span className="block text-[10px] font-semibold text-emerald-600/80 normal-case tracking-normal">资产互通 数据同步</span>
+                  <span className="block text-[10px] font-semibold text-amber-600/80 normal-case tracking-normal">资产互通 数据同步</span>
                 </span>
               </button>
             </div>
@@ -2771,315 +2773,61 @@ export default function GamifiedMarketingCenter() {
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-7 items-start pt-2 max-w-[1680px] mx-auto">
               
               {/* Left Column: Fixed Phone Mockup containing the active game screen */}
-              <div className="xl:col-span-7 xl:sticky xl:top-4 flex flex-col items-center rounded-[30px] bg-[linear-gradient(135deg,#f4f7ff,#ffffff)] border border-blue-50 shadow-[0_18px_60px_rgba(30,58,138,0.08)] py-6">
-                <div className="relative flex flex-col items-center">
-                  <div className="relative w-[min(430px,54vh)] h-[min(835px,calc(100vh-150px))] rounded-[42px] border-[12px] border-slate-900 bg-slate-950 shadow-2xl flex flex-col overflow-hidden select-none ring-8 ring-white">
-                  {/* Screen notch / Dynamic Island */}
-                  <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-[68px] h-3 bg-slate-900 border border-slate-805 rounded-full z-50 flex items-center justify-center">
-                    <div className="w-1 h-1 rounded-full bg-slate-800" />
-                  </div>
-                  
-                  {/* Top Status Indicators */}
-                  <div className="absolute top-0.5 inset-x-0 h-4 bg-transparent z-40 flex items-center justify-between px-5 text-white/90 text-[8.5px] font-mono select-none">
-                    <span>08:53</span>
-                    <div className="flex items-center gap-1">
-                      <span>● WIFI</span>
-                      <span className="text-emerald-400">100%</span>
-                    </div>
-                  </div>
-
-                  {/* Simulated Mobile screen content */}
-                  <div className="flex-1 relative overflow-hidden bg-slate-950 flex flex-col justify-between pt-4">
-                    {/* HUD Stats */}
-                    <div className="absolute top-2.5 left-2.5 right-2.5 z-40 flex items-center justify-between bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/5 text-white font-mono text-[9px]">
-                      <div className="flex items-center gap-1 text-yellow-300 font-extrabold">
-                        <span>得分:</span>
-                        <span className="text-[10px]">{gameScore}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-1 text-blue-300">
-                        <Clock className="w-2.5 h-2.5" />
-                        <span>{gameTimer}s</span>
-                      </div>
-
-                      <div className="flex gap-0.5">
-                        {Array.from({ length: 3 }).map((_, idx) => (
-                          <span 
-                            key={idx} 
-                            className={cn(
-                              "text-[9px] transition-all", 
-                              idx < gameLives ? "opacity-100 scale-105" : "opacity-25 scale-90 grayscale"
-                            )}
-                          >
-                            ❤️
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* EVENT SOUND NOTIFICATION */}
-                    {gameAudioAlert && (
-                      <div className="absolute top-10 left-1/2 -translate-x-1/2 z-[45] bg-blue-600/90 text-white text-[8px] font-bold px-2 py-0.5 rounded-md whitespace-nowrap animate-bounce shadow">
-                        {gameAudioAlert}
-                      </div>
-                    )}
-
-                    {/* START VIEW FOR INLINE PREVIEW */}
-                    {gameState === "start" && (
-                      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 to-[#19153A] z-30 flex flex-col items-center justify-center p-4 text-center">
-                        <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl mb-3 shadow animate-pulse">
-                          {trialGameId === "candy" && "🍭"}
-                          {trialGameId === "dragon" && "🐉"}
-                          {trialGameId === "watermelon" && "🍉"}
-                        </div>
-                        <h4 className="text-[11px] font-black text-white tracking-wide">{TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.title}</h4>
-                        <p className="text-[8px] text-slate-400 max-w-[170px] mt-1.5 leading-relaxed font-semibold">
-                          左右移动设备按键或轻踩方向键盘 [A]/[D]，接取道具或躲避障碍，即可快速试玩！
-                        </p>
-                        <button 
-                          onClick={() => {
-                            setGameState("playing");
-                            setGameScore(0);
-                            setGameLives(3);
-                            setGameTimer(trialGameId === "watermelon" ? 22 : 28);
-                            setGameEntities([]);
-                          }}
-                          className={cn("mt-5 px-5 py-2 text-white text-[9.5px] font-black rounded-full transition-all duration-300 shadow cursor-pointer", themeBtn)}
-                        >
-                          立即开启试玩
-                        </button>
-                      </div>
-                    )}
-
-                    {/* PLAYING VIEW */}
-                    {gameState === "playing" && (
-                      <div className="flex-1 w-full relative h-full bg-[#1A1438]">
-                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/30 to-slate-950 pointer-events-none opacity-50" />
-                        {/* Dragon Boat grids */}
-                        {trialGameId === "dragon" && (
-                          <div className="absolute inset-0 flex select-none pointer-events-none">
-                            <div className="w-1/3 h-full border-r border-[#312E81]/25" />
-                            <div className="w-1/3 h-full border-r border-[#312E81]/25" />
-                          </div>
-                        )}
-                        {/* Candy Basket Ground line */}
-                        {trialGameId === "candy" && (
-                          <div className="absolute bottom-10 inset-x-0 h-[1px] border-t border-dashed border-white/5 pointer-events-none" />
-                        )}
-
-                        {/* Game entities looping */}
-                        {gameEntities.map((ent) => {
-                          if (trialGameId === "watermelon") {
-                            return (
-                              <div 
-                                key={ent.id}
-                                onClick={() => handleSliceWatermelon(ent.id, ent.type)}
-                                onMouseEnter={() => handleSliceWatermelon(ent.id, ent.type)}
-                                className={cn("absolute text-xl select-none cursor-pointer flex items-center justify-center w-6 h-6 -translate-x-1/2 -translate-y-1/2", ent.isSliced && "opacity-0 scale-125")}
-                                style={{ left: `${ent.x}%`, top: `${ent.y}%` }}
-                              >
-                                {ent.emoji}
-                              </div>
-                            );
-                          } else {
-                            return (
-                              <div 
-                                key={ent.id}
-                                className="absolute text-lg select-none flex items-center justify-center w-6 h-6 -translate-x-1/2 -translate-y-1/2"
-                                style={{ left: `${ent.x}%`, top: `${ent.y}%` }}
-                              >
-                                {ent.emoji}
-                              </div>
-                            );
-                          }
-                        })}
-
-                        {/* Player icons */}
-                        {trialGameId === "candy" && (
-                          <div className="absolute bottom-8 w-10 h-4 -translate-x-1/2 transition-all duration-75 flex flex-col items-center" style={{ left: `${playerX}%` }}>
-                            <div className="w-full h-3 bg-pink-500 rounded-b-md border-t border-pink-400 flex items-center justify-center text-[5.5px] text-white font-black uppercase">
-                              BASKET
-                            </div>
-                          </div>
-                        )}
-
-                        {trialGameId === "dragon" && (
-                          <div className="absolute bottom-6 w-8 h-10 -translate-x-1/2 transition-all duration-150 flex flex-col items-center" style={{ left: `${playerLane === 0 ? 18 : playerLane === 1 ? 50 : 82}%` }}>
-                            <span className="text-sm">🐲</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* WIN STATE */}
-                    {gameState === "win" && (
-                      <div className="absolute inset-0 bg-slate-900/98 z-30 flex flex-col items-center justify-center p-4 text-center animate-in fade-in duration-300">
-                        <span className="text-3xl animate-bounce">🏆</span>
-                        <div className="text-[8px] bg-emerald-500 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-wider mb-1">
-                          VICTORY
-                        </div>
-                        <h4 className="text-[11px] font-black text-white">试玩通关成功！</h4>
-                        <p className="text-[8px] text-slate-400 max-w-[170px] mt-1 font-semibold">
-                          营销效果评估优秀，最高转化提升达 <strong>98%</strong>，立即配置规则上线！
-                        </p>
-                        <div className="bg-slate-950 border border-slate-800 p-2 rounded-xl w-full max-w-[180px] mt-3 flex items-center justify-between text-left text-[9px] font-mono leading-none">
-                          <div>
-                            <span className="text-slate-500 block text-[8px] font-sans">成绩:</span>
-                            <span className="text-emerald-400 font-bold ml-0.5">{gameScore} Pts</span>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-slate-500 block text-[8px] font-sans">通关线:</span>
-                            <span className="text-white font-bold">{trialGameId === "watermelon" ? "50" : "60"}分</span>
-                          </div>
-                        </div>
-                        <div className="flex gap-1.5 w-full max-w-[180px] mt-4">
-                          <button 
-                            onClick={() => handlePlayGame(trialGameId!)}
-                            className="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-[8px] font-bold py-1.8 rounded-lg cursor-pointer"
-                          >
-                            誓雪再战
-                          </button>
-                          <button 
-                            onClick={() => alert(`一键套用玩法：${TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.title}！方案初始化成功。`)}
-                            className={cn("flex-1 text-white text-[8px] font-bold py-1.8 rounded-lg cursor-pointer", themeBtn)}
-                          >
-                            AI 套用
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* GAMEOVER STATE */}
-                    {gameState === "gameover" && (
-                      <div className="absolute inset-0 bg-slate-900/98 z-30 flex flex-col items-center justify-center p-4 text-center">
-                        <span className="text-2xl">👾</span>
-                        <h4 className="text-[11px] font-black text-white mt-1">挑战未通过</h4>
-                        <p className="text-[8px] text-slate-400 max-w-[170px] mt-1 font-semibold">
-                          最终得分: <span className="text-red-400 font-extrabold">{gameScore} Pts</span>. 改写不服!
-                        </p>
-                        <div className="flex gap-1.5 w-full max-w-[180px] mt-4">
-                          <button 
-                            onClick={() => { setGameState("start"); setGameScore(0); }}
-                            className="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-[8px] font-bold py-1.5 rounded-lg cursor-pointer"
-                          >
-                            返回
-                          </button>
-                          <button 
-                            onClick={() => handlePlayGame(trialGameId!)}
-                            className={cn("flex-1 text-white text-[8px] font-bold py-1.5 rounded-lg cursor-pointer", themeBtn)}
-                          >
-                            再来一局
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Directions inside phone mockup */}
-                    {gameState === "playing" && (trialGameId === "candy" || trialGameId === "dragon") && (
-                      <div className="absolute bottom-2 inset-x-2 bg-slate-900/95 py-1 px-2 border-t border-slate-800 rounded-xl flex items-center justify-between gap-2 z-40 select-none">
-                        <button 
-                          onClick={() => {
-                            if (trialGameId === "candy") setPlayerX(p => Math.max(8, p - 12));
-                            else setPlayerLane(p => Math.max(0, p - 1));
-                          }}
-                          className="flex-grow py-1 bg-slate-800 text-[8px] text-white font-bold rounded-md active:scale-95 cursor-pointer"
-                        >
-                          ◀
-                        </button>
-                        <button 
-                          onClick={() => {
-                            if (trialGameId === "candy") setPlayerX(p => Math.min(92, p + 12));
-                            else setPlayerLane(p => Math.min(2, p + 1));
-                          }}
-                          className="flex-grow py-1 bg-slate-800 text-[8px] text-white font-bold rounded-md active:scale-95 cursor-pointer"
-                        >
-                          ▶
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Sidebar floating icons dock (absolute on desktop, horizontal below phone on mobile) */}
-                <div className="xl:absolute xl:top-8 xl:-right-16 xl:left-auto flex xl:flex-col flex-row gap-3 mt-4 xl:mt-0 z-45">
-                  {/* Favorite Button */}
+              <div className="xl:col-span-7 xl:sticky xl:top-4 flex flex-col items-center rounded-[30px] bg-[linear-gradient(135deg,#f4f7ff,#ffffff)] border border-blue-50 shadow-[0_18px_60px_rgba(30,58,138,0.08)] py-6 relative overflow-visible">
+                <div className="absolute right-6 top-6 z-20 flex flex-col items-center gap-3">
                   <button 
                     onClick={() => toggleFavorite(detailTemplateId!)}
-                    className="p-3 rounded-full border border-slate-200 bg-white text-slate-600 transition-all cursor-pointer active:scale-95 shadow-md flex items-center justify-center w-11 h-11"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition-all cursor-pointer active:scale-95 shadow-md"
                     title={favorites.has(detailTemplateId!) ? "取消收藏" : "收藏模板"}
                   >
                     <Heart className={cn("w-5 h-5 transition-colors", favorites.has(detailTemplateId!) ? "fill-red-500 text-red-500 border-transparent animate-pulse" : "text-slate-650")} />
                   </button>
 
-                  {/* Share Button with Hover QR code popup */}
                   <div className="relative group/share">
                     <button 
-                      className="p-3 rounded-full border border-slate-200 hover:bg-slate-50 bg-white text-slate-650 transition-all cursor-pointer active:scale-95 shadow-md flex items-center justify-center w-11 h-11"
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 hover:bg-slate-50 bg-white text-slate-650 transition-all cursor-pointer active:scale-95 shadow-md"
                       title="查看/分享二维码"
                     >
                       <Share2 className="w-5 h-5 text-slate-600" />
                     </button>
                     
-                    {/* Hover QR Card */}
-                    <div className="absolute right-0 xl:right-auto xl:left-1/2 xl:-translate-x-1/2 top-full mt-2 w-[220px] p-4 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 pointer-events-none opacity-0 group-hover/share:opacity-100 group-hover/share:pointer-events-auto transition-all duration-300 transform scale-95 group-hover/share:scale-100 origin-top flex flex-col items-center gap-2 bg-white/98 backdrop-blur-md">
-                      {/* Beautiful SVG QR code block */}
-                      <div className="w-34 h-34 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center p-2 relative group/qr shadow-xs">
-                        <svg className="w-full h-full text-slate-800" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <rect x="5" y="5" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="4" />
-                          <rect x="11" y="11" width="10" height="10" rx="1.5" fill="currentColor" />
-                          
-                          <rect x="73" y="5" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="4" />
-                          <rect x="79" y="11" width="10" height="10" rx="1.5" fill="currentColor" />
-
-                          <rect x="5" y="73" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="4" />
-                          <rect x="11" y="79" width="10" height="10" rx="1.5" fill="currentColor" />
-
-                          <rect x="42" y="42" width="16" height="16" rx="3" fill="#2563eb" />
-                          <text x="50" y="54" fontSize="10" fill="white" fontWeight="bold" textAnchor="middle">📱</text>
-
-                          <rect x="35" y="10" width="6" height="6" fill="currentColor" />
-                          <rect x="45" y="15" width="4" height="4" fill="currentColor" />
-                          <rect x="55" y="8" width="8" height="6" fill="currentColor" />
-                          <rect x="10" y="35" width="6" height="6" fill="currentColor" />
-                          <rect x="18" y="45" width="4" height="4" fill="currentColor" />
-                          <rect x="8" y="55" width="8" height="6" fill="currentColor" />
-
-                          <rect x="80" y="35" width="6" height="6" fill="currentColor" />
-                          <rect x="72" y="48" width="4" height="4" fill="currentColor" />
-                          <rect x="85" y="58" width="8" height="6" fill="currentColor" />
-
-                          <rect x="35" y="80" width="8" height="6" fill="currentColor" />
-                          <rect x="48" y="75" width="4" height="4" fill="currentColor" />
-                          <rect x="58" y="82" width="6" height="6" fill="currentColor" />
-
-                          <rect x="32" y="30" width="4" height="4" fill="currentColor" />
-                          <rect x="64" y="32" width="6" height="6" fill="currentColor" />
-                          <rect x="30" y="64" width="4" height="4" fill="currentColor" />
-                          <rect x="66" y="66" width="6" height="6" fill="currentColor" />
-                        </svg>
+                    <div className="absolute right-0 top-full mt-2 w-[178px] p-3 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 pointer-events-none opacity-0 group-hover/share:opacity-100 group-hover/share:pointer-events-auto transition-all duration-300 transform scale-95 group-hover/share:scale-100 origin-top flex flex-col items-center gap-2 bg-white/98 backdrop-blur-md">
+                      <div className="w-36 h-36 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center p-2 relative group/qr shadow-xs">
+                        <img
+                          src={shareQrReference}
+                          alt="微信扫描二维码"
+                          className="h-full w-full object-contain"
+                        />
                       </div>
-                      <span className="text-[11px] font-black text-slate-700 flex items-center gap-1 leading-none whitespace-nowrap mt-1">
+                      <span className="text-[11px] font-black text-slate-700 flex items-center gap-1.5 leading-none whitespace-nowrap mt-1">
                         <ScanLine className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
-                        手机微信 扫码发布
+                        微信扫描二维码
                       </span>
                     </div>
                   </div>
                 </div>
 
+                <div className="relative flex flex-col items-center">
+                  <div className="relative w-[min(430px,54vh)] h-[min(835px,calc(100vh-150px))] rounded-[42px] border-[12px] border-slate-900 bg-slate-950 shadow-2xl flex flex-col overflow-hidden select-none ring-8 ring-white">
+                    <img
+                      src={gameDetailPreviewReference}
+                      alt="模板详情预览图"
+                      className="h-full w-full object-cover object-top"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
 
               {/* Right Column: Game Details tags and grid recommended templates */}
               <div className="xl:col-span-5 space-y-5">
                 
                 {/* 1. Core Header and Description Card with Tags and actions */}
-                <div className="bg-white rounded-[28px] border border-slate-100 p-6 md:p-7 shadow-[0_16px_44px_rgba(30,58,138,0.08)] flex flex-col justify-between relative overflow-hidden group">
+                <div className="bg-white rounded-[28px] border border-slate-100 p-6 md:p-7 shadow-[0_16px_44px_rgba(30,58,138,0.08)] flex flex-col justify-between relative overflow-visible group">
                   <div className="absolute top-0 right-0 w-44 h-44 bg-gradient-to-bl from-blue-50 to-transparent rounded-full pointer-events-none" />
-                  
                   <div className="flex items-start justify-between flex-wrap gap-4 z-10">
                     <div className="flex items-center">
                       <div>
-                        <span className="text-[10px] uppercase font-black tracking-widest text-blue-600 bg-blue-50 border border-blue-100/50 px-2.5 py-1 rounded-md leading-none">
+                        <span className="text-[12px] uppercase font-black tracking-widest text-blue-600 bg-blue-50 border border-blue-100/50 px-2.5 py-1 rounded-md leading-none">
                           {TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.type} • 节日大促特荐
                         </span>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-3 leading-tight">
@@ -3100,7 +2848,7 @@ export default function GamifiedMarketingCenter() {
                     ].filter(Boolean).slice(0, 3).map((tag, idx) => (
                       <span 
                         key={idx} 
-                        className="text-[11px] font-bold px-2.5 py-1.5 bg-slate-100 text-slate-650 rounded-xl hover:bg-slate-200/60 transition-colors cursor-default"
+                        className="text-[13px] font-bold px-2.5 py-1.5 bg-slate-100 text-slate-650 rounded-xl hover:bg-slate-200/60 transition-colors cursor-default"
                       >
                         {tag}
                       </span>
@@ -3129,12 +2877,12 @@ export default function GamifiedMarketingCenter() {
 
                 <div className="space-y-4 pt-2">
                   <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                    <Flame className="w-4 h-4 text-rose-500 fill-rose-500/10" />
+                    <Flame className="w-5 h-5 text-rose-500 fill-rose-500/10" />
                     相似玩法推荐
                   </h3>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    {TEMPLATES_DATA.filter(t => t.id !== detailTemplateId).slice(0, 4).map((item, index) => (
+                  <div className="grid grid-cols-3 gap-3">
+                    {TEMPLATES_DATA.filter(t => t.id !== detailTemplateId).slice(0, 15).map((item, index) => (
                       <MarketingTemplateCard
                         key={item.id}
                         item={item}

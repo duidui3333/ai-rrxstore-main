@@ -678,12 +678,12 @@ export const PLACEHOLDER_PHRASES = [
 ];
 
 export const HOT_SEARCHES = [
-  { text: "青年五四知识赛", icon: "👮", hot: true },
-  { text: "暑期益智词汇打卡", icon: "📝", hot: true },
-  { text: "性格神仙体质测评", icon: "🔮", hot: true },
-  { text: "消防安全规范考评", icon: "🚨", hot: false },
-  { text: "Python基础开发测试", icon: "💻", hot: false },
-  { text: "企业半年合规测评", icon: "💎", hot: false }
+  { text: "萌娃大赛", icon: "👶", hot: true },
+  { text: "年度评选", icon: "🏆", hot: true },
+  { text: "摄影大赛", icon: "📸", hot: true },
+  { text: "才艺评选", icon: "🎭", hot: false },
+  { text: "视频投票", icon: "🎬", hot: false },
+  { text: "语音投票", icon: "🎙️", hot: false }
 ];
 
 import imgTemplateCover1 from "../../assets/images/marketing_template_cover_1_1779935600707.png";

@@ -1362,6 +1362,496 @@ const HOT_SEARCHES = [
   { text: "集福卡赢好礼", icon: "🎁", hot: false }
 ];
 
+const categoryTabColorMap: Record<string, { bg: string; active: string }> = {
+  全部: { bg: "bg-blue-50", active: "bg-blue-600 text-white shadow-[0_12px_24px_rgba(37,99,235,0.18)]" },
+  抽奖营销: { bg: "bg-pink-50", active: "bg-pink-600 text-white shadow-[0_12px_24px_rgba(219,39,119,0.18)]" },
+  红包营销: { bg: "bg-indigo-50", active: "bg-indigo-600 text-white shadow-[0_12px_24px_rgba(79,70,229,0.18)]" },
+  投票评选: { bg: "bg-emerald-50", active: "bg-emerald-600 text-white shadow-[0_12px_24px_rgba(5,150,105,0.18)]" },
+  裂变营销: { bg: "bg-amber-50", active: "bg-amber-600 text-white shadow-[0_12px_24px_rgba(217,119,6,0.18)]" },
+  签到打卡: { bg: "bg-fuchsia-50", active: "bg-fuchsia-600 text-white shadow-[0_12px_24px_rgba(192,38,211,0.18)]" },
+  节日营销: { bg: "bg-purple-50", active: "bg-purple-600 text-white shadow-[0_12px_24px_rgba(147,51,234,0.18)]" },
+  电商支付: { bg: "bg-cyan-50", active: "bg-cyan-600 text-white shadow-[0_12px_24px_rgba(8,145,178,0.18)]" },
+  活动报名: { bg: "bg-orange-50", active: "bg-orange-600 text-white shadow-[0_12px_24px_rgba(234,88,12,0.18)]" },
+  问卷调查: { bg: "bg-blue-50", active: "bg-blue-600 text-white shadow-[0_12px_24px_rgba(37,99,235,0.18)]" },
+  大型活动: { bg: "bg-violet-50", active: "bg-violet-600 text-white shadow-[0_12px_24px_rgba(124,58,237,0.18)]" }
+};
+
+const getHotSearchEmoji = (value: string) => {
+  const emojiMap: Record<string, string> = {
+    抽奖营销: "🎁",
+    红包营销: "🧧",
+    投票评选: "🗳️",
+    裂变营销: "🚀",
+    签到打卡: "📅",
+    节日营销: "🎉",
+    电商支付: "🛍️",
+    活动报名: "📝",
+    问卷调查: "📋",
+    大型活动: "🏟️",
+    全部: "🔥"
+  };
+  return emojiMap[value] || "🔥";
+};
+
+const getUsageText = (hot: number) => `${(hot / 10000).toFixed(2).replace(/0+$/, "").replace(/\.$/, "")}万人使用`;
+
+function MarketingSearchHero({
+  title,
+  searchValue,
+  onSearchChange,
+  placeholder,
+  hotSearches,
+  onHotSearch,
+  category = "center"
+}: {
+  title: React.ReactNode;
+  searchValue: string;
+  onSearchChange: (value: string) => void;
+  placeholder: string;
+  hotSearches: Array<{ text: string; emoji: string }>;
+  onHotSearch: (value: string) => void;
+  category?: string;
+}) {
+  const leftCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rightCanvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    let frame = 0;
+    let raf = 0;
+    const theme = category || "center";
+
+    const roundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    };
+
+    const drawGiftCard = (ctx: CanvasRenderingContext2D, t: number) => {
+      ctx.fillStyle = "#ffffff";
+      roundedRect(ctx, -74, -54, 148, 108, 24);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(130,160,230,0.22)";
+      ctx.stroke();
+      ctx.fillStyle = "#ff8a3d";
+      roundedRect(ctx, -52, -18, 104, 54, 16);
+      ctx.fill();
+      ctx.fillStyle = "#ffd89a";
+      ctx.fillRect(-8, -18, 16, 54);
+      ctx.fillRect(-52, 0, 104, 12);
+      ctx.beginPath();
+      ctx.arc(-14, -26, 14 + Math.sin(t * 2) * 2, 0, Math.PI * 2);
+      ctx.arc(14, -26, 14 + Math.sin(t * 2 + 0.8) * 2, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    const drawRedPacketCard = (ctx: CanvasRenderingContext2D, t: number) => {
+      ctx.fillStyle = "#ffffff";
+      roundedRect(ctx, -78, -56, 156, 112, 26);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(130,160,230,0.22)";
+      ctx.stroke();
+      ctx.fillStyle = "#ef4444";
+      roundedRect(ctx, -44, -34, 88, 92, 20);
+      ctx.fill();
+      ctx.fillStyle = "#facc15";
+      ctx.beginPath();
+      ctx.arc(0, 0, 18 + Math.sin(t * 2) * 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(-44, -6, 88, 12);
+    };
+
+    const drawCheckinCard = (ctx: CanvasRenderingContext2D) => {
+      ctx.fillStyle = "#ffffff";
+      roundedRect(ctx, -76, -54, 152, 108, 24);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(130,160,230,0.22)";
+      ctx.stroke();
+      ctx.fillStyle = "#2f6cff";
+      roundedRect(ctx, -76, -54, 152, 24, 16);
+      ctx.fill();
+      for (let i = 0; i < 6; i += 1) {
+        const cx = -44 + (i % 3) * 42;
+        const cy = -6 + Math.floor(i / 3) * 30;
+        ctx.fillStyle = "#dbe8ff";
+        roundedRect(ctx, cx, cy, 22, 18, 6);
+        ctx.fill();
+        if (i < 4) {
+          ctx.strokeStyle = "#5ec46b";
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(cx + 4, cy + 10);
+          ctx.lineTo(cx + 10, cy + 15);
+          ctx.lineTo(cx + 18, cy + 5);
+          ctx.stroke();
+        }
+      }
+    };
+
+    const drawFormCard = (ctx: CanvasRenderingContext2D, t: number) => {
+      ctx.fillStyle = "#ffffff";
+      roundedRect(ctx, -78, -56, 156, 112, 26);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(130,160,230,0.22)";
+      ctx.stroke();
+      ctx.fillStyle = "#ffb14a";
+      roundedRect(ctx, -48, -34, 96, 18, 9);
+      ctx.fill();
+      for (let i = 0; i < 3; i += 1) {
+        ctx.fillStyle = "#dbe8ff";
+        roundedRect(ctx, -48, -4 + i * 22, 70, 12, 6);
+        ctx.fill();
+        ctx.strokeStyle = i === 1 ? "#2f6cff" : "#5ec46b";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(38, 2 + i * 22, 7 + (i === 1 ? Math.sin(t * 2) : 0), 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    };
+
+    const drawMarketingPrimary = (ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => {
+      ctx.clearRect(0, 0, w, h);
+      ctx.save();
+      ctx.translate(w / 2, h / 2 + Math.sin(t * 1.25) * 5);
+      ctx.rotate(-0.13 + Math.sin(t * 0.8) * 0.035);
+      const glow = ctx.createRadialGradient(0, 0, 20, 0, 0, 126);
+      glow.addColorStop(0, "rgba(74,144,255,0.22)");
+      glow.addColorStop(1, "rgba(74,144,255,0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(-140, -120, 280, 240);
+      if (theme.includes("红包")) drawRedPacketCard(ctx, t);
+      else if (theme.includes("签到")) drawCheckinCard(ctx);
+      else if (theme.includes("问卷")) drawFormCard(ctx, t);
+      else drawGiftCard(ctx, t);
+      ctx.restore();
+    };
+
+    const drawMarketingSecondary = (ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => {
+      ctx.clearRect(0, 0, w, h);
+      ctx.save();
+      ctx.translate(w / 2, h / 2 + Math.cos(t * 1.1) * 4);
+      ctx.rotate(0.12 + Math.sin(t * 0.75) * 0.035);
+      const glow = ctx.createRadialGradient(0, -18, 10, 0, -8, 132);
+      glow.addColorStop(0, "rgba(138,107,255,0.24)");
+      glow.addColorStop(1, "rgba(138,107,255,0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(-145, -140, 290, 280);
+      const base = ctx.createLinearGradient(-82, -74, 84, 82);
+      base.addColorStop(0, "#ffffff");
+      base.addColorStop(0.58, "#f7f3ff");
+      base.addColorStop(1, "#dbe8ff");
+      ctx.fillStyle = base;
+      roundedRect(ctx, -82, -70, 164, 138, 34);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(118,119,218,0.24)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      if (theme.includes("红包")) {
+        ["¥", "券", "礼"].forEach((label, i) => {
+          ctx.fillStyle = ["#ef4444", "#ff8a3d", "#2f6cff"][i];
+          roundedRect(ctx, -58 + i * 42, -26 + i * 6, 28, 62, 10);
+          ctx.fill();
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 18px sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(label, -44 + i * 42, 6 + i * 6);
+        });
+      } else {
+        const points = theme.includes("问卷") ? [-34, -8, 18, 40] : [-20, 12, 32, 48];
+        ctx.strokeStyle = "#2f6cff";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(-52, 34);
+        points.forEach((py, i) => ctx.lineTo(-20 + i * 24, py));
+        ctx.stroke();
+        points.forEach((py, i) => {
+          ctx.fillStyle = i === points.length - 1 ? "#ff8a3d" : "#5ec46b";
+          ctx.beginPath();
+          ctx.arc(-20 + i * 24, py, 8 + (i === points.length - 1 ? Math.sin(t * 2) * 1.5 : 0), 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.fillStyle = "#ffb14a";
+        roundedRect(ctx, -56, -40, 74, 18, 9);
+        ctx.fill();
+      }
+      ctx.restore();
+    };
+
+    const render = () => {
+      frame += 1;
+      const t = frame / 60;
+      [
+        { canvas: leftCanvasRef.current, draw: drawMarketingPrimary },
+        { canvas: rightCanvasRef.current, draw: drawMarketingSecondary }
+      ].forEach(({ canvas, draw }) => {
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const width = Math.max(1, Math.round(rect.width * dpr));
+        const height = Math.max(1, Math.round(rect.height * dpr));
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+        }
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        draw(ctx, rect.width, rect.height, t);
+        ctx.restore();
+      });
+      raf = requestAnimationFrame(render);
+    };
+
+    render();
+    return () => cancelAnimationFrame(raf);
+  }, [category]);
+
+  return (
+    <section className="relative overflow-hidden bg-[linear-gradient(135deg,#f4f7ff_0%,#ffffff_48%,#eef4ff_100%)] px-6 py-14 sm:px-10 lg:px-16 lg:py-20">
+      <div className="pointer-events-none absolute left-7 top-14 hidden h-44 w-52 rounded-[45%] bg-blue-200/20 blur-3xl md:block" />
+      <div className="pointer-events-none absolute right-7 top-8 hidden h-52 w-56 rounded-[45%] bg-violet-200/28 blur-3xl md:block" />
+      <div className="pointer-events-none absolute left-[7%] top-[25%] hidden md:block">
+        <canvas ref={leftCanvasRef} className="h-[210px] w-[280px]" aria-hidden="true" />
+      </div>
+      <div className="pointer-events-none absolute right-[7%] top-[22%] hidden md:block">
+        <canvas ref={rightCanvasRef} className="h-[230px] w-[260px]" aria-hidden="true" />
+      </div>
+      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
+        <h1 className="text-[30px] font-black leading-tight tracking-normal text-slate-900 sm:text-[40px]">{title}</h1>
+        <div className="mt-7 flex h-[60px] w-full max-w-[720px] items-center gap-3 rounded-full border border-blue-100 bg-white px-5 shadow-[0_16px_34px_rgba(40,98,255,0.14)]">
+          <Search className="h-5 w-5 shrink-0 text-slate-400" />
+          <input
+            value={searchValue}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder={placeholder}
+            className="min-w-0 flex-1 bg-transparent text-[15px] font-normal text-slate-800 outline-none placeholder:text-slate-400"
+          />
+          {searchValue && (
+            <button onClick={() => onSearchChange("")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 cursor-pointer" title="清空搜索">
+              <X className="h-4 w-4" />
+            </button>
+          )}
+          <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white shadow-[0_10px_22px_rgba(37,99,235,0.28)] transition hover:bg-blue-700 cursor-pointer">
+            <Search className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="mt-5 flex max-w-[720px] flex-wrap items-center justify-center gap-2 text-[12px] font-bold text-slate-500">
+          <span className="mr-1 text-slate-600">热门搜索:</span>
+          {hotSearches.map((term) => (
+            <button
+              key={term.text}
+              onClick={() => onHotSearch(term.text)}
+              className="rounded-full bg-slate-100/80 px-3 py-1.5 text-slate-500 transition hover:bg-blue-50 hover:text-blue-600 cursor-pointer"
+            >
+              <span className="mr-1.5">{term.emoji}</span>
+              {term.text}
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MarketingCategoryTabs({
+  items,
+  active,
+  onSelect
+}: {
+  items: Array<{ id: string; name: string }>;
+  active: string;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <div className="relative z-20 -mt-9 flex justify-center px-6 sm:px-8 lg:px-10">
+      <div className="inline-flex max-w-full items-center gap-2 overflow-x-auto rounded-3xl border border-slate-100 bg-white/95 p-3 shadow-[0_16px_40px_rgba(30,58,138,0.08)] backdrop-blur no-scrollbar">
+        {items.map((item, index) => {
+          const colorConfig = categoryTabColorMap[item.id] || categoryTabColorMap["全部"];
+          const isActive = active === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => onSelect(item.id)}
+              className={cn(
+                "flex h-12 min-w-[124px] items-center justify-center gap-2 rounded-2xl px-3.5 text-[13px] font-black transition-all cursor-pointer whitespace-nowrap",
+                isActive ? colorConfig.active : "text-slate-700 hover:bg-slate-50"
+              )}
+            >
+              <span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[15px]", isActive ? "bg-white/16" : colorConfig.bg)}>
+                {getHotSearchEmoji(item.id)}
+              </span>
+              <span className="whitespace-nowrap leading-none">{item.name}</span>
+              {index < items.length - 1 && !isActive && <span className="ml-3 hidden h-5 w-px bg-slate-100 lg:block" />}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function MarketingTemplateCard({
+  item,
+  index,
+  favorites,
+  onToggleFavorite,
+  onPreview,
+  onDetail
+}: {
+  item: any;
+  index: number;
+  favorites: Set<string>;
+  onToggleFavorite: (id: string) => void;
+  onPreview: (id: string) => void;
+  onDetail: (id: string) => void;
+}) {
+  const image = getTemplateImage(item.id, index);
+  const isFav = favorites.has(item.id);
+  const badgeText = item.percentage >= 95 ? "热门" : "新品";
+  const badgeClass = item.percentage >= 95 ? "bg-red-500" : "bg-blue-600";
+  const tags = [item.type, item.scene === "全部" ? `${item.style}风` : item.scene].filter(Boolean).slice(0, 2);
+
+  return (
+    <article
+      onClick={() => onDetail(item.id)}
+      className="group overflow-hidden rounded-2xl bg-white shadow-[0_12px_30px_rgba(30,41,59,0.08)] ring-1 ring-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_44px_rgba(30,41,59,0.14)] cursor-pointer"
+    >
+      <div className={cn("relative aspect-[5/8] overflow-hidden bg-gradient-to-br", item.colorBg)}>
+        <img src={image} alt={item.title} className="absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-hover:scale-105" referrerPolicy="no-referrer" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/34" />
+        <div className={cn("absolute left-3 top-3 rounded-md px-2.5 py-1 text-[12px] font-black text-white shadow-sm backdrop-blur-sm", badgeClass)}>{badgeText}</div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite(item.id);
+          }}
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-slate-900/22 text-white backdrop-blur-sm transition hover:bg-slate-900/40 cursor-pointer"
+        >
+          <Heart className={cn("h-4 w-4", isFav && "fill-rose-500 text-rose-500")} />
+        </button>
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-2 bg-slate-950/58 opacity-0 backdrop-blur-[4px] transition-all duration-300 group-hover:opacity-100">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onPreview(item.id);
+            }}
+            className="flex w-[110px] items-center justify-center gap-1.5 rounded-full bg-indigo-600 py-2 text-xs font-black text-white shadow-md transition hover:bg-indigo-700 cursor-pointer"
+          >
+            扫码预览 <ScanLine className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDetail(item.id);
+            }}
+            className="flex w-[110px] items-center justify-center gap-1.5 rounded-full bg-white py-2 text-xs font-black text-slate-900 shadow-md transition hover:bg-slate-50 cursor-pointer"
+          >
+            查看详情
+          </button>
+        </div>
+      </div>
+      <div className="px-4 pb-4 pt-3">
+        <h3 className="line-clamp-1 text-[14px] font-black text-slate-900" title={item.title}>{item.title}</h3>
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <div className="flex min-w-0 flex-wrap gap-1.5">
+            {tags.map((tag) => (
+              <span key={tag} className="rounded-md bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-500">{tag}</span>
+            ))}
+          </div>
+          <div className="flex shrink-0 items-center gap-1 text-[10px] font-bold text-slate-500">
+            <Flame className="h-3 w-3 fill-orange-500 text-orange-500" />
+            {getUsageText(item.hot)}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function MarketingTemplateGallery({
+  title,
+  templates,
+  selectedSort,
+  onSortChange,
+  filterTabs,
+  favorites,
+  onToggleFavorite,
+  onPreview,
+  onDetail,
+  emptyTitle,
+  emptyDesc,
+  onReset
+}: {
+  title: string;
+  templates: any[];
+  selectedSort: string;
+  onSortChange: (value: string) => void;
+  filterTabs?: React.ReactNode;
+  favorites: Set<string>;
+  onToggleFavorite: (id: string) => void;
+  onPreview: (id: string) => void;
+  onDetail: (id: string) => void;
+  emptyTitle: string;
+  emptyDesc: string;
+  onReset: () => void;
+}) {
+  return (
+    <section className="px-6 pb-10 pt-6 sm:px-8 lg:px-10">
+      <div className="rounded-[28px] bg-white/92 p-4 shadow-[0_18px_60px_rgba(30,58,138,0.08)] ring-1 ring-slate-100 sm:p-5">
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-[20px] font-black tracking-normal text-slate-900">{title}</h2>
+          <select
+            value={selectedSort}
+            onChange={(e) => onSortChange(e.target.value)}
+            className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-xs font-black text-slate-600 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+          >
+            <option value="综合排序">综合排序</option>
+            <option value="模板热度">最热排行</option>
+            <option value="上架时间">最新上线</option>
+          </select>
+        </div>
+        {filterTabs ? <div className="mb-5">{filterTabs}</div> : null}
+        {templates.length > 0 ? (
+          <div className="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(230px,1fr))]">
+            {templates.map((item, index) => (
+              <MarketingTemplateCard
+                key={item.id}
+                item={item}
+                index={index}
+                favorites={favorites}
+                onToggleFavorite={onToggleFavorite}
+                onPreview={onPreview}
+                onDetail={onDetail}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-slate-50/70 px-6 py-16 text-center">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white text-slate-400 shadow-sm">
+              <Info className="h-8 w-8" />
+            </div>
+            <p className="text-[15px] font-black text-slate-600">{emptyTitle}</p>
+            <p className="mt-1 text-sm font-bold text-slate-400">{emptyDesc}</p>
+            <button onClick={onReset} className="mt-5 rounded-full bg-blue-600 px-6 py-2.5 text-[13px] font-black text-white shadow-sm transition hover:bg-blue-700 cursor-pointer">
+              重置过滤
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 const getTemplateImage = (id: string, idx = 0) => {
   const images = [imgTemplateCover1, imgTemplateCover2, imgTemplateCover3];
   return images[idx % images.length];
@@ -1883,20 +2373,9 @@ export default function AiMarketingCenter() {
 
   return (
     <div className="flex-1 flex w-full h-[calc(100vh-64px)] overflow-hidden bg-[#F8FAFC]">
-      {/* 1. Left Sidebar specifically for Gamified Games (游戏玩法) */}
       <aside className="w-[190px] shrink-0 bg-white flex flex-col h-full relative border-r border-slate-100 select-none">
-        
-        {/* Scrollable area for Navigation + Banners */}
-        <div className={cn(
-          "flex-1 overflow-y-auto no-scrollbar flex flex-col",
-          isShortScreen ? "pb-[220px]" : "pb-4"
-        )}>
+        <div className={cn("flex-1 overflow-y-auto no-scrollbar flex flex-col", isShortScreen ? "pb-[220px]" : "pb-4")}>
           <div className="h-4 shrink-0" />
-          <div className="px-4 pb-2">
-            
-          </div>
-
-          {/* Regular sidebar navigation */}
           <nav className="p-2 space-y-0.5 shrink-0">
             {SIDEBAR_ITEMS.map((item) => {
               const isActive = activeSidebar === item.id;
@@ -1906,138 +2385,123 @@ export default function AiMarketingCenter() {
                   onClick={() => handleSidebarClick(item.id, item.name)}
                   className={cn(
                     "w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-[14px] font-bold transition-all relative group cursor-pointer text-left",
-                    isActive 
-                      ? `${themeBtn} text-white shadow-soft` 
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    isActive ? `${themeBtn} text-white shadow-soft` : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   )}
                 >
-                  <item.icon className={cn("w-4 h-4 shrink-0 transition-transform group-hover:scale-105", isActive ? "text-white animate-pulse" : "text-slate-500")} />
+                  <item.icon className={cn("w-4 h-4 shrink-0 transition-transform group-hover:scale-105", isActive ? "text-white" : "text-slate-500")} />
                   <span>{item.name}</span>
-                  {item.id === "center" && (
-                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-purple-500 block animate-ping" />
-                  )}
                 </button>
               );
             })}
           </nav>
 
-          {/* Premium Promotion Banners directly under 动作类 (一行一个) */}
-          <div className="px-2 mt-3 space-y-1.5 text-left shrink-0">
-            {/* Banner 1: 微信小程序对接 with WeChat Green Style and WeChat bubble icon */}
-            <div 
-              onClick={() => alert("微信小程序对接：支持一键将微端和游戏发布为独立微信小程序，多级缓存秒级响应。如需具体对接技术文档，请点击下方「定制服务」联系技术支持人员。")}
-              className="group/banner relative p-3 rounded-xl bg-gradient-to-br from-[#EEFDF4] to-[#E2F9EC] border border-[#10B981]/25 shadow-xs flex items-center justify-between gap-1.5 cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] active:scale-95"
-            >
-              <div className="flex-1 min-w-0">
-                <span className="text-[11.5px] font-black text-[#047857] block truncate">微信小程序对接</span>
-                <span className="text-[9px] text-[#10B981]/80 font-semibold block mt-0.5">无需开发 极速嵌接</span>
-              </div>
-              <div className="w-7 h-7 bg-[#EAFBF3] rounded-lg flex items-center justify-center border border-[#D1F7E4] shadow-xs shrink-0 select-none transition-transform group-hover/banner:rotate-6">
-                <MessagesSquare className="w-4 h-4 fill-[#07C160] text-white" />
-              </div>
-            </div>
-
-            {/* Banner 2: APP集成 */}
-            <div 
-              onClick={() => alert("APP集成方案：全面支持 iOS/Android Native App 集成、Flutter/React Native 混合架构。轻量级 SDK 方案可使研发在 3 小时内实现首款游戏落地接入。")}
-              className="group/banner relative p-3 rounded-xl bg-gradient-to-br from-[#EDF5FF] to-[#E0E7FF] border border-[#C7D2FE]/40 shadow-xs flex items-center justify-between gap-1.5 cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] active:scale-95"
-            >
-              <div className="flex-1 min-w-0">
-                <span className="text-[11.5px] font-black text-[#1E40AF] block truncate">APP 集成安全方案</span>
-                <span className="text-[9px] text-[#2563EB]/75 font-semibold block mt-0.5">iOS & Android 无缝嵌入</span>
-              </div>
-              <div className="w-7 h-7 bg-white/80 rounded-lg flex items-center justify-center border border-[#C7D2FE]/30 shadow-xs shrink-0 select-none text-[14px] leading-none group-hover/banner:rotate-6 transition-transform">
-                📱
-              </div>
-            </div>
-
-            {/* Banner 3: 活动接口打通 */}
-            <div 
-              onClick={() => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现游戏金币、成长值、优惠券等道具资产与核心用户库的实时结算流。")}
-              className="group/banner relative p-3 rounded-xl bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5] border border-[#A7F3D0]/40 shadow-xs flex items-center justify-between gap-1.5 cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] active:scale-95"
-            >
-              <div className="flex-1 min-w-0">
-                <span className="text-[11.5px] font-black text-[#065F46] block truncate">活动接口打通</span>
-                <span className="text-[9px] text-[#059669]/75 font-semibold block mt-0.5">资产互通 数据同步</span>
-              </div>
-              <div className="w-7 h-7 bg-white/80 rounded-lg flex items-center justify-center border border-[#A7F3D0]/30 shadow-xs shrink-0 select-none text-[14px] leading-none group-hover/banner:rotate-6 transition-transform">
-                ⚙️
-              </div>
-            </div>
-          </div>
-
-          {/* Normal flow Service and Support when height is sufficient */}
           {!isShortScreen && (
-            <div className="mt-auto pt-3 px-2 space-y-0.5 text-left shrink-0">
-              <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
-                服务与支持
+            <div className="mt-auto px-2 pb-4 space-y-3 text-left shrink-0">
+              <div className="space-y-0.5">
+                <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
+                  接入方案
+                </div>
+                <button
+                  onClick={() => alert("微信小程序对接：支持一键将微端和营销活动发布为独立微信小程序，多级缓存秒级响应。如需具体对接技术文档，请点击下方「定制服务」联系技术支持人员。")}
+                  className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
+                >
+                  <MessagesSquare className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate">微信小程序对接</span>
+                    <span className="block text-[10px] font-semibold text-emerald-600/80 normal-case tracking-normal">无需开发 极速嵌接</span>
+                  </span>
+                </button>
+                <button
+                  onClick={() => alert("APP集成方案：全面支持 iOS/Android Native App 集成、Flutter/React Native 混合架构。轻量级 SDK 方案可使研发在 3 小时内实现首款营销活动落地接入。")}
+                  className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
+                >
+                  <Smartphone className="w-4 h-4 text-blue-500 shrink-0" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate">APP 集成安全方案</span>
+                    <span className="block text-[10px] font-semibold text-blue-600/75 normal-case tracking-normal">iOS & Android 无缝嵌入</span>
+                  </span>
+                </button>
+                <button
+                  onClick={() => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现优惠券、红包、积分等营销资产与核心用户库的实时结算流。")}
+                  className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
+                >
+                  <Code className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-amber-500">活动接口打通</span>
+                    <span className="block text-[10px] font-semibold text-amber-600/80 normal-case tracking-normal">资产互通 数据同步</span>
+                  </span>
+                </button>
               </div>
-              <button 
-                onClick={() => alert("人人秀帮助中心：为您提供全方位的技术指导、方案部署细节、以及模版编辑疑问。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <HelpCircle className="w-4 h-4 text-slate-400" />
-                帮助中心
-              </button>
-              <button 
-                onClick={() => alert("客户案例看板：查阅大型跨国零售商、大促电商、本地生活等各板块优秀落地游玩转化案例。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <BookOpen className="w-4 h-4 text-slate-400" />
-                客户案例
-              </button>
-              <button 
-                onClick={() => alert("开放平台开发者门户：可提供统一的 OAuth2 会员鉴权、游戏引擎调用接口 API 和安全回调机制。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <Code className="w-4 h-4 text-slate-400" />
-                开放平台
-              </button>
-              <button 
-                onClick={() => alert("定制服务专家：支持提供专属前端大促节日IP设计、深层底层架构迁移等高级服务，我们将安排专门资深顾问联系您。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <Briefcase className="w-4 h-4 text-slate-400" />
-                定制服务
-              </button>
+
+              <div className="space-y-0.5">
+                <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">服务与支持</div>
+                <button onClick={() => alert("人人秀帮助中心：为您提供全方位的技术指导、方案部署细节、以及模版编辑疑问。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                  <HelpCircle className="w-4 h-4 text-slate-400" />
+                  帮助中心
+                </button>
+                <button onClick={() => alert("客户案例看板：查阅大型跨国零售商、大促电商、本地生活等各板块优秀落地转化案例。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                  <BookOpen className="w-4 h-4 text-slate-400" />
+                  客户案例
+                </button>
+                <button onClick={() => alert("开放平台开发者门户：可提供统一的 OAuth2 会员鉴权、营销引擎调用接口 API 和安全回调机制。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                  <Code className="w-4 h-4 text-slate-400" />
+                  开放平台
+                </button>
+                <button onClick={() => alert("定制服务专家：支持提供专属节日营销IP设计、深层系统打通等高级服务，我们将安排专门资深顾问联系您。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                  <Briefcase className="w-4 h-4 text-slate-400" />
+                  定制服务
+                </button>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Floating/Absolute Service and Support only when screen height is small/short */}
         {isShortScreen && (
-          <div className="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md pt-2 pb-3 px-2 border-t border-slate-100 shadow-[0_-8px_20px_rgba(0,0,0,0.03)] z-20 space-y-0.5 text-left">
-            <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
-              服务与支持
+          <div className="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md pt-2 pb-3 px-2 border-t border-slate-100 shadow-[0_-8px_20px_rgba(0,0,0,0.03)] z-20 space-y-3 text-left">
+            <div className="space-y-0.5">
+              <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">接入方案</div>
+              <button onClick={() => alert("微信小程序对接：支持一键将微端和营销活动发布为独立微信小程序，多级缓存秒级响应。如需具体对接技术文档，请点击下方「定制服务」联系技术支持人员。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                <MessagesSquare className="w-4 h-4 text-emerald-500" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate">微信小程序对接</span>
+                  <span className="block text-[10px] font-semibold text-emerald-600/80 normal-case tracking-normal">无需开发 极速嵌接</span>
+                </span>
+              </button>
+              <button onClick={() => alert("APP集成方案：全面支持 iOS/Android Native App 集成、Flutter/React Native 混合架构。轻量级 SDK 方案可使研发在 3 小时内实现首款营销活动落地接入。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                <Smartphone className="w-4 h-4 text-blue-500" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate">APP 集成安全方案</span>
+                  <span className="block text-[10px] font-semibold text-blue-600/75 normal-case tracking-normal">iOS & Android 无缝嵌入</span>
+                </span>
+              </button>
+              <button onClick={() => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现优惠券、红包、积分等营销资产与核心用户库的实时结算流。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                <Code className="w-4 h-4 text-amber-500" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-amber-500">活动接口打通</span>
+                  <span className="block text-[10px] font-semibold text-amber-600/80 normal-case tracking-normal">资产互通 数据同步</span>
+                </span>
+              </button>
             </div>
-            <button 
-              onClick={() => alert("人人秀帮助中心：为您提供全方位的技术指导、方案部署细节、以及模版编辑疑问。")}
-              className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-            >
-              <HelpCircle className="w-4 h-4 text-slate-400" />
-              帮助中心
-            </button>
-            <button 
-              onClick={() => alert("客户案例看板：查阅大型跨国零售商、大促电商、本地生活等各板块优秀落地游玩转化案例。")}
-              className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-            >
-              <BookOpen className="w-4 h-4 text-slate-400" />
-              客户案例
-            </button>
-            <button 
-              onClick={() => alert("开放平台开发者门户：可提供统一的 OAuth2 会员鉴权、游戏引擎调用接口 API 和安全回调机制。")}
-              className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-            >
-              <Code className="w-4 h-4 text-slate-400" />
-              开放平台
-            </button>
-            <button 
-              onClick={() => alert("定制服务专家：支持提供专属前端大促节日IP设计、深层底层架构迁移等高级服务，我们将安排专门资深顾问联系您。")}
-              className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-            >
-              <Briefcase className="w-4 h-4 text-slate-400" />
-              定制服务
-            </button>
+
+            <div className="space-y-0.5">
+              <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">服务与支持</div>
+              <button onClick={() => alert("人人秀帮助中心：为您提供全方位的技术指导、方案部署细节、以及模版编辑疑问。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                <HelpCircle className="w-4 h-4 text-slate-400" />
+                帮助中心
+              </button>
+              <button onClick={() => alert("客户案例看板：查阅大型跨国零售商、大促电商、本地生活等各板块优秀落地转化案例。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                <BookOpen className="w-4 h-4 text-slate-400" />
+                客户案例
+              </button>
+              <button onClick={() => alert("开放平台开发者门户：可提供统一的 OAuth2 会员鉴权、营销引擎调用接口 API 和安全回调机制。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                <Code className="w-4 h-4 text-slate-400" />
+                开放平台
+              </button>
+              <button onClick={() => alert("定制服务专家：支持提供专属节日营销IP设计、深层系统打通等高级服务，我们将安排专门资深顾问联系您。")} className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left">
+                <Briefcase className="w-4 h-4 text-slate-400" />
+                定制服务
+              </button>
+            </div>
           </div>
         )}
       </aside>
@@ -2503,6 +2967,96 @@ export default function AiMarketingCenter() {
               </div>
             </div>
           </div>
+        ) : true ? (
+          <>
+            {activeSidebar === "center" ? (
+              <div className="w-full animate-in fade-in duration-300">
+                <MarketingSearchHero
+                  title={<>搜索你想要的<span className="text-blue-600">AI 营销模板</span></>}
+                  searchValue={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  placeholder={typedPlaceholder || "搜索抽奖营销、红包营销、签到打卡、节日营销等玩法"}
+                  hotSearches={HOT_SEARCHES.map((item) => ({ text: item.text, emoji: item.icon }))}
+                  onHotSearch={setSearchQuery}
+                  category="center"
+                />
+
+                <MarketingCategoryTabs
+                  items={GAMEPLAY_CATEGORIES.map((cat) => ({ id: cat.id, name: cat.id === "全部" ? "全部" : cat.name }))}
+                  active={selectedType}
+                  onSelect={(id) => setSelectedType(id)}
+                />
+
+                <MarketingTemplateGallery
+                  title={selectedType === "全部" ? "全部营销模板" : `${selectedType}模板`}
+                  templates={filteredTemplates}
+                  selectedSort={selectedSort}
+                  onSortChange={setSelectedSort}
+                  favorites={favorites}
+                  onToggleFavorite={toggleFavorite}
+                  onPreview={setPreviewModalTemplateId}
+                  onDetail={handleSelectTemplateDetail}
+                  emptyTitle="未找到匹配该过滤条件的营销模板"
+                  emptyDesc="请尝试更换分类、节日场景或搜索其他关键词"
+                  onReset={() => {
+                    setSelectedType("全部");
+                    setSelectedStyle("全部");
+                    setSelectedFestival("全部");
+                    setSearchQuery("");
+                    setActiveSidebar("center");
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="w-full animate-in fade-in duration-300">
+                {(() => {
+                  const catConfig = CATEGORY_CONFIGS[activeSidebar];
+                  if (!catConfig) return null;
+                  const hotTerms = catConfig.subPlaystyles.slice(0, 6).map((text) => ({ text, emoji: getHotSearchEmoji(activeSidebar) }));
+
+                  return (
+                    <>
+                      <MarketingSearchHero
+                        title={<><span className="text-blue-600">{activeSidebar}</span>模板</>}
+                        searchValue={categorySearchQuery}
+                        onSearchChange={setCategorySearchQuery}
+                        placeholder={`搜索${activeSidebar}玩法模板、活动主题、营销场景`}
+                        hotSearches={hotTerms}
+                        onHotSearch={(value) => {
+                          if (catConfig.subPlaystyles.includes(value)) setSelectedCategorySubFilter(value);
+                          else setCategorySearchQuery(value);
+                        }}
+                        category={activeSidebar}
+                      />
+
+                      <MarketingCategoryTabs
+                        items={catConfig.subPlaystyles.map((sub) => ({ id: sub === "全部" ? activeSidebar : sub, name: sub }))}
+                        active={selectedCategorySubFilter === "全部" ? activeSidebar : selectedCategorySubFilter}
+                        onSelect={(id) => setSelectedCategorySubFilter(id === activeSidebar ? "全部" : id)}
+                      />
+
+                      <MarketingTemplateGallery
+                        title={`${activeSidebar}模板`}
+                        templates={categoryFiltered}
+                        selectedSort={selectedSort}
+                        onSortChange={setSelectedSort}
+                        favorites={favorites}
+                        onToggleFavorite={toggleFavorite}
+                        onPreview={setPreviewModalTemplateId}
+                        onDetail={handleSelectTemplateDetail}
+                        emptyTitle="该细分玩法或搜索目录下暂无对应模板"
+                        emptyDesc="请尝试切换到其他玩法筛选项，或者清除本专区搜索框内容"
+                        onReset={() => {
+                          setCategorySearchQuery("");
+                          setSelectedCategorySubFilter("全部");
+                        }}
+                      />
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+          </>
         ) : activeSidebar === "center" ? (
           <div className="max-w-[1440px] w-full mx-auto p-6 md:p-8 space-y-6">
           
