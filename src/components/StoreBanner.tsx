@@ -1,6 +1,6 @@
 import { Image, Layers, Search, Sparkles } from "lucide-react";
 import FeatureHighlights from "./FeatureHighlights";
-import bannerBackground from "../assets/images/storebanner_bg_bitmap1.png";
+import bannerBackground from "../assets/images/template_center_banner_223.png";
 
 export default function StoreBanner({ palette }: { palette: any }) {
   const hotSearches = [

@@ -20,7 +20,7 @@ import imgAction from "../assets/images/cat_action_1779523229602.png";
 import imgTemplateCover1 from "../assets/images/marketing_template_cover_1_1779935600707.png";
 import imgTemplateCover2 from "../assets/images/marketing_template_cover_2_1779935619140.png";
 import imgTemplateCover3 from "../assets/images/marketing_template_cover_3_1779935640170.png";
-import shareQrReference from "../assets/images/share_qr_reference.png";
+import IntegrationOptionsSection from "./IntegrationOptionsSection";
 import templateImage1 from "../assets/images/template_image_01.png";
 import templateImage2 from "../assets/images/template_image_02.png";
 import templateImage3 from "../assets/images/template_image_03.png";
@@ -39,10 +39,11 @@ import categoryTabShooting from "../assets/images/category-tabs/tab_shooting.png
 import categoryTabPuzzle from "../assets/images/category-tabs/tab_puzzle.png";
 import categoryTabSynthesis from "../assets/images/category-tabs/tab_synthesis.png";
 import categoryTabStage from "../assets/images/category-tabs/tab_stage.png";
-import gameDetailPreviewReference from "../assets/images/game_detail_preview_reference.png";
 import categoryTabReaction from "../assets/images/category-tabs/tab_reaction.png";
 import categoryTabCatching from "../assets/images/category-tabs/tab_catching.png";
 import categoryTabAction from "../assets/images/category-tabs/tab_action.png";
+import TemplateCard from "./TemplateCard";
+import SiteTemplateDetailPage from "./SiteTemplateDetailPage";
 
 
 // Dictionary mapping gameplay categories to sub-playstyles, banners, and descriptions
@@ -1405,7 +1406,7 @@ const categoryColorMap: Record<string, { bg: string; icon: string; active: strin
   "动作类": { bg: "bg-sky-50", icon: "text-sky-600", active: "bg-sky-600 text-white shadow-[0_12px_24px_rgba(14,165,233,0.18)]" }
 };
 
-const getUsageText = (hot: number) => `${(hot / 10000).toFixed(3).replace(/0+$/, "").replace(/\.$/, "")}万人使用`;
+const getUsageText = (hot: number) => `${(hot / 10000).toFixed(3).replace(/0+$/, "").replace(/\.$/, "")}万`;
 
 function GameSearchHero({
   title,
@@ -1667,52 +1668,72 @@ function GameSearchHero({
           break;
         }
         case "合成类": {
-          const fruits = side === "left" ? ["#ef4444", "#f97316", "#22c55e"] : ["#facc15", "#fb7185", "#34d399"];
-          fruits.forEach((color, i) => {
-            const r = 22 + i * 8;
+          if (side === "left") {
+            [
+              { x: -46, y: 18, r: 26, color: "#ef4444" },
+              { x: 0, y: -10, r: 36, color: "#f59e0b" },
+              { x: 46, y: 24, r: 26, color: "#22c55e" },
+            ].forEach((item, index) => {
+              ctx.beginPath();
+              ctx.fillStyle = item.color;
+              ctx.arc(item.x, item.y + Math.sin(t * 1.7 + index) * 3, item.r, 0, Math.PI * 2);
+              ctx.fill();
+            });
+            ctx.strokeStyle = "#2563eb";
+            ctx.lineWidth = 6;
+            ctx.lineCap = "round";
             ctx.beginPath();
-            ctx.fillStyle = color;
-            ctx.arc(-52 + i * 52, 6 + Math.sin(t * 2 + i) * 5, r, 0, Math.PI * 2);
-            ctx.fill();
-          });
-          ctx.strokeStyle = "#2563eb";
-          ctx.lineWidth = 5;
-          ctx.beginPath();
-          ctx.moveTo(-20, -58);
-          ctx.quadraticCurveTo(10, -80, 44, -48);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(44, -48);
-          ctx.lineTo(28, -48);
-          ctx.lineTo(42, -32);
-          ctx.stroke();
+            ctx.moveTo(-18, -56);
+            ctx.quadraticCurveTo(14, -78, 52, -44);
+            ctx.stroke();
+          } else {
+            const layers = [
+              { x: -36, y: 26, r: 28, color: "#facc15" },
+              { x: 0, y: 0, r: 34, color: "#fb7185" },
+              { x: 36, y: 28, r: 28, color: "#34d399" },
+            ];
+            layers.forEach((item, index) => {
+              ctx.beginPath();
+              ctx.fillStyle = item.color;
+              ctx.arc(item.x, item.y + Math.cos(t * 1.5 + index) * 3, item.r, 0, Math.PI * 2);
+              ctx.fill();
+            });
+          }
           break;
         }
         case "闯关类": {
           if (side === "left") {
+            const steps = [
+              { x: -62, y: 36, w: 40, h: 18 },
+              { x: -12, y: 10, w: 40, h: 18 },
+              { x: 38, y: -16, w: 40, h: 18 },
+            ];
+            ctx.fillStyle = "#cbd5e1";
+            steps.forEach((step) => {
+              roundedRect(ctx, step.x, step.y, step.w, step.h, 8);
+              ctx.fill();
+            });
             ctx.fillStyle = "#2563eb";
             ctx.beginPath();
-            ctx.arc(-20, -42 + bob, 16, 0, Math.PI * 2);
+            ctx.arc(-24, 10 + bob, 20, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = "#2563eb";
-            ctx.lineWidth = 10;
+            ctx.lineWidth = 7;
             ctx.lineCap = "round";
             ctx.beginPath();
-            ctx.moveTo(-22, -20 + bob);
-            ctx.lineTo(12, 8 + bob);
-            ctx.lineTo(42, 36 + bob);
-            ctx.moveTo(2, 4 + bob);
-            ctx.lineTo(-36, 34 + bob);
+            ctx.moveTo(-10, 22 + bob);
+            ctx.lineTo(18, 0 + bob);
+            ctx.lineTo(44, -20 + bob);
             ctx.stroke();
           } else {
             ctx.fillStyle = "#94a3b8";
-            for (let i = 0; i < 4; i++) {
-              roundedRect(ctx, -82 + i * 55, 32 - i * 22, 42, 20, 6);
+            for (let i = 0; i < 3; i++) {
+              roundedRect(ctx, -60 + i * 48, 28 - i * 28, 46, 22, 8);
               ctx.fill();
             }
             ctx.fillStyle = "#f97316";
             ctx.beginPath();
-            ctx.arc(66, -52 + bob, 18, 0, Math.PI * 2);
+            ctx.arc(58, -56 + bob, 20, 0, Math.PI * 2);
             ctx.fill();
           }
           break;
@@ -1721,13 +1742,15 @@ function GameSearchHero({
           if (side === "left") {
             ctx.fillStyle = "#f43f5e";
             ctx.beginPath();
-            ctx.moveTo(5, -72);
-            ctx.lineTo(-44, 4);
-            ctx.lineTo(-6, 4);
-            ctx.lineTo(-18, 74);
-            ctx.lineTo(48, -12);
-            ctx.lineTo(10, -12);
-            ctx.closePath();
+            ctx.arc(0, 0, 56, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(0, 0, 30, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#2563eb";
+            ctx.beginPath();
+            ctx.arc(0, 0, 12, 0, Math.PI * 2);
             ctx.fill();
           } else {
             const r = 54 + Math.sin(t * 4) * 4;
@@ -1751,12 +1774,22 @@ function GameSearchHero({
             ctx.strokeStyle = "#0ea5e9";
             ctx.lineWidth = 12;
             ctx.beginPath();
-            ctx.moveTo(-70, 24);
-            ctx.quadraticCurveTo(0, 76, 70, 24);
+            ctx.moveTo(-76, 34);
+            ctx.quadraticCurveTo(0, 72, 76, 34);
             ctx.stroke();
             ctx.fillStyle = "#bae6fd";
-            roundedRect(ctx, -66, 22, 132, 40, 18);
+            roundedRect(ctx, -72, 30, 144, 34, 16);
             ctx.fill();
+            [
+              { x: -34, y: -34, color: "#f59e0b" },
+              { x: 8, y: -8, color: "#facc15" },
+              { x: 44, y: -42, color: "#fb7185" },
+            ].forEach((item, index) => {
+              ctx.beginPath();
+              ctx.fillStyle = item.color;
+              ctx.arc(item.x, item.y + ((t * 26 + index * 18) % 24), 16, 0, Math.PI * 2);
+              ctx.fill();
+            });
           } else {
             for (let i = 0; i < 6; i++) {
               ctx.fillStyle = i % 2 ? "#f59e0b" : "#facc15";
@@ -1774,18 +1807,18 @@ function GameSearchHero({
           if (side === "left") {
             ctx.fillStyle = "#22c55e";
             ctx.beginPath();
-            ctx.ellipse(-22, 0, 42, 26, -0.5, 0, Math.PI * 2);
+            ctx.ellipse(-20, 8, 46, 28, -0.5, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = "#ef4444";
             ctx.lineWidth = 6;
             ctx.beginPath();
-            ctx.arc(-22, 0, 42, -0.5, 2.6);
+            ctx.arc(-20, 8, 46, -0.5, 2.6);
             ctx.stroke();
             ctx.strokeStyle = "#ffffff";
-            ctx.lineWidth = 5;
+            ctx.lineWidth = 7;
             ctx.beginPath();
-            ctx.moveTo(-80 + Math.sin(t * 2) * 18, -56);
-            ctx.lineTo(78, 54);
+            ctx.moveTo(-78 + Math.sin(t * 2) * 16, -48);
+            ctx.lineTo(82, 62);
             ctx.stroke();
           } else {
             ctx.strokeStyle = "#2563eb";
@@ -1844,11 +1877,11 @@ function GameSearchHero({
     <section className="relative overflow-hidden bg-[linear-gradient(135deg,#f4f7ff_0%,#ffffff_48%,#eef4ff_100%)] px-6 py-14 sm:px-10 lg:px-16 lg:py-20">
       <div className="pointer-events-none absolute left-7 top-14 hidden h-44 w-52 rounded-[45%] bg-blue-200/20 blur-3xl md:block" />
       <div className="pointer-events-none absolute right-7 top-8 hidden h-52 w-56 rounded-[45%] bg-violet-200/28 blur-3xl md:block" />
-      <div className="pointer-events-none absolute left-[7%] top-[25%] hidden md:block">
-        <canvas ref={leftCanvasRef} className="h-[210px] w-[280px]" aria-hidden="true" />
+      <div className="pointer-events-none absolute left-[6%] top-[18%] hidden overflow-visible md:block">
+        <canvas ref={leftCanvasRef} className="h-[260px] w-[320px] overflow-visible" aria-hidden="true" />
       </div>
-      <div className="pointer-events-none absolute right-[7%] top-[22%] hidden md:block">
-        <canvas ref={rightCanvasRef} className="h-[230px] w-[260px]" aria-hidden="true" />
+      <div className="pointer-events-none absolute right-[6%] top-[16%] hidden overflow-visible md:block">
+        <canvas ref={rightCanvasRef} className="h-[260px] w-[320px] overflow-visible" aria-hidden="true" />
       </div>
 
       <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
@@ -1897,17 +1930,18 @@ function GameSearchHero({
 function GameCategoryTabs({
   items,
   active,
-  onSelect
+  onSelect,
+  showIcons = true,
 }: {
   items: Array<{ id: string; name: string }>;
   active: string;
   onSelect: (id: string) => void;
+  showIcons?: boolean;
 }) {
   return (
     <div className="relative z-20 -mt-9 flex justify-center px-6 sm:px-8 lg:px-10">
-      <div className="inline-flex max-w-full items-center gap-2 overflow-x-auto rounded-3xl border border-slate-100 bg-white/95 p-3 shadow-[0_16px_40px_rgba(30,58,138,0.08)] backdrop-blur no-scrollbar">
+      <div className="inline-flex max-w-full items-center gap-2 overflow-x-auto rounded-3xl border border-slate-100 bg-white/95 px-3 py-2 shadow-[0_16px_40px_rgba(30,58,138,0.08)] backdrop-blur no-scrollbar">
         {items.map((item, index) => {
-          const iconImage = categoryTabImageMap[item.id] || categoryTabImageMap["全部"];
           const colors = categoryColorMap[item.id] || categoryColorMap["全部"];
           const isActive = active === item.id;
 
@@ -1916,24 +1950,28 @@ function GameCategoryTabs({
               key={item.id}
               onClick={() => onSelect(item.id)}
               className={cn(
-                "flex h-12 min-w-[112px] items-center justify-center gap-2 rounded-2xl px-4 text-[13px] font-black transition-all cursor-pointer",
+                showIcons
+                  ? "relative flex h-11 min-w-[104px] items-center justify-center rounded-2xl px-5 text-[13px] font-black transition-all cursor-pointer"
+                  : "relative flex h-10 min-w-[92px] items-center justify-center rounded-2xl px-4 text-[13px] font-black transition-all cursor-pointer",
                 isActive ? colors.active : "text-slate-700 hover:bg-slate-50"
               )}
             >
-              <span className={cn(
-                "flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full",
-                isActive ? "bg-white/16" : colors.bg
-              )}>
-                <img
-                  src={iconImage}
-                  alt={item.name}
-                  className="h-full w-full scale-[1.06] rounded-full object-cover object-center"
-                  draggable={false}
-                />
-              </span>
+              {showIcons ? (
+                <span className={cn(
+                  "mr-2 flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full",
+                  isActive ? "bg-white/16" : colors.bg
+                )}>
+                  <img
+                    src={categoryTabImageMap[item.id] || categoryTabImageMap["全部"]}
+                    alt={item.name}
+                    className="h-full w-full scale-[1.06] rounded-full object-cover object-center"
+                    draggable={false}
+                  />
+                </span>
+              ) : null}
               <span>{item.name}</span>
               {index < items.length - 1 && !isActive && (
-                <span className="ml-3 hidden h-5 w-px bg-slate-100 lg:block" />
+                <span className="pointer-events-none absolute right-[-5px] top-1/2 hidden h-4 w-px -translate-y-1/2 bg-slate-200 lg:block" />
               )}
             </button>
           );
@@ -1956,49 +1994,21 @@ function MarketingTemplateCard({
   onDetail: () => void;
 }) {
   const image = getTemplateImage(index, categoryKey);
-  const badgeText = item.percentage >= 95 ? "热门" : "新品";
-  const badgeClass = item.percentage >= 95 ? "bg-red-500" : "bg-blue-600";
   const tags = [item.type, item.scene === "全部" ? item.style : item.scene].filter(Boolean).slice(0, 2);
 
   return (
-    <article
+    <TemplateCard
+      key={item.id}
+      title={item.title}
+      image={image}
+      category={tags[0] || item.type}
+      subCategory={tags[1] || (item.scene === "全部" ? item.style : item.scene)}
+      usageText={item.hot > 10000 ? `${(item.hot / 10000).toFixed(1)}w` : `${item.hot}`}
       onClick={onDetail}
-      className="group overflow-hidden rounded-2xl bg-white shadow-[0_12px_30px_rgba(30,41,59,0.08)] ring-1 ring-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_44px_rgba(30,41,59,0.14)] cursor-pointer"
-    >
-      <div
-        className={cn("relative aspect-[5/8] overflow-hidden bg-gradient-to-br", item.colorBg)}
-      >
-        <img
-          src={image}
-          alt={item.title}
-          className="absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-hover:scale-105"
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/34" />
-        <div className={cn("absolute left-3 top-3 rounded-md px-2.5 py-1 text-[12px] font-black text-white shadow-sm backdrop-blur-sm", badgeClass)}>
-          {badgeText}
-        </div>
-        <div className="absolute inset-0 bg-slate-950/0 transition-colors duration-300 group-hover:bg-slate-950/10" />
-      </div>
-      <div className="px-4 pb-4 pt-3">
-        <h3 className="line-clamp-1 text-[14px] font-black text-slate-900" title={item.title}>
-          {item.title}
-        </h3>
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <div className="flex min-w-0 flex-wrap gap-1.5">
-            {tags.map((tag: string) => (
-              <span key={tag} className="rounded-md bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-500">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <div className="flex shrink-0 items-center gap-1 text-[10px] font-bold text-slate-500">
-            <Flame className="h-3 w-3 fill-orange-500 text-orange-500" />
-            {getUsageText(item.hot)}
-          </div>
-        </div>
-      </div>
-    </article>
+      badgeText={item.percentage >= 95 ? "爆款" : undefined}
+      badgeClassName="bg-red-500/90"
+      imageWrapperClassName={cn("bg-gradient-to-br", item.colorBg)}
+    />
   );
 }
 
@@ -2053,7 +2063,7 @@ function TemplateGalleryPanel({
         </div>
 
         {displayTemplates.length > 0 ? (
-          <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
+          <div className="grid grid-cols-2 gap-4 pt-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-5 xl:grid-cols-6 2xl:grid-cols-7 min-[1800px]:grid-cols-8">
             {displayTemplates.map((item, index) => (
               <MarketingTemplateCard
                 key={`${item.id}-${index}`}
@@ -2091,6 +2101,32 @@ export default function GamifiedMarketingCenter() {
   const themeBgLight = "bg-blue-50";
   const themeBorder = "border-blue-200 flex-wrap";
   const themeFocusRing = "focus:ring-blue-500/20 focus:border-blue-500";
+  const integrationItems = [
+    {
+      title: "微信小程序对接",
+      subtitle: "无需开发 极速嵌接",
+      onClick: () => alert("微信小程序对接：支持一键将微端和游戏发布为独立微信小程序，多级缓存秒级响应。如需具体对接技术文档，请点击下方「定制服务」联系技术支持人员。"),
+      icon: MessagesSquare,
+      iconClassName: "text-emerald-500",
+      subtitleClassName: "text-emerald-600/80",
+    },
+    {
+      title: "APP 集成安全方案",
+      subtitle: "iOS & Android 无缝嵌入",
+      onClick: () => alert("APP集成方案：全面支持 iOS/Android Native App 集成、Flutter/React Native 混合架构。轻量级 SDK 方案可使研发在 3 小时内实现首款游戏落地接入。"),
+      icon: Smartphone,
+      iconClassName: "text-blue-500",
+      subtitleClassName: "text-blue-600/75",
+    },
+    {
+      title: "活动接口打通",
+      subtitle: "资产互通 数据同步",
+      onClick: () => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现游戏金币、成长值、优惠券等道具资产与核心用户库的实时结算流。"),
+      icon: Code,
+      iconClassName: "text-amber-500",
+      subtitleClassName: "text-amber-600/80",
+    },
+  ];
 
   // Navigation State
   const [activeSidebar, setActiveSidebar] = useState("center");
@@ -2512,6 +2548,11 @@ export default function GamifiedMarketingCenter() {
     });
   };
 
+  const currentDetailTemplate = useMemo(() => {
+    if (!detailTemplateId) return null;
+    return TEMPLATES_DATA.find((item) => item.id === detailTemplateId) || null;
+  }, [detailTemplateId]);
+
   // Real-time reactive search & filtering algorithm
   const filteredTemplates = useMemo(() => {
     let result = [...TEMPLATES_DATA];
@@ -2615,41 +2656,7 @@ export default function GamifiedMarketingCenter() {
 
           {!isShortScreen && (
             <div className="mt-auto px-2 pb-4 space-y-3 text-left shrink-0">
-              <div className="space-y-0.5">
-                <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
-                  接入方案
-                </div>
-                <button
-                  onClick={() => alert("微信小程序对接：支持一键将微端和游戏发布为独立微信小程序，多级缓存秒级响应。如需具体对接技术文档，请点击下方「定制服务」联系技术支持人员。")}
-                  className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-                >
-                  <MessagesSquare className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate">微信小程序对接</span>
-                    <span className="block text-[10px] font-semibold text-emerald-600/80 normal-case tracking-normal">无需开发 极速嵌接</span>
-                  </span>
-                </button>
-                <button
-                  onClick={() => alert("APP集成方案：全面支持 iOS/Android Native App 集成、Flutter/React Native 混合架构。轻量级 SDK 方案可使研发在 3 小时内实现首款游戏落地接入。")}
-                  className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-                >
-                  <Smartphone className="w-4 h-4 text-blue-500 shrink-0" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate">APP 集成安全方案</span>
-                    <span className="block text-[10px] font-semibold text-blue-600/75 normal-case tracking-normal">iOS & Android 无缝嵌入</span>
-                  </span>
-                </button>
-                <button
-                  onClick={() => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现游戏金币、成长值、优惠券等道具资产与核心用户库的实时结算流。")}
-                  className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-                >
-                  <Code className="w-4 h-4 text-amber-500 shrink-0" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate">活动接口打通</span>
-                    <span className="block text-[10px] font-semibold text-amber-600/80 normal-case tracking-normal">资产互通 数据同步</span>
-                  </span>
-                </button>
-              </div>
+              <IntegrationOptionsSection items={integrationItems} />
 
               <div className="space-y-0.5">
                 <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
@@ -2691,41 +2698,7 @@ export default function GamifiedMarketingCenter() {
         {/* Floating/Absolute Service and Support only when screen height is small/short */}
         {isShortScreen && (
           <div className="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md pt-2 pb-3 px-2 border-t border-slate-100 shadow-[0_-8px_20px_rgba(0,0,0,0.03)] z-20 space-y-3 text-left">
-            <div className="space-y-0.5">
-              <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
-                接入方案
-              </div>
-              <button
-                onClick={() => alert("微信小程序对接：支持一键将微端和游戏发布为独立微信小程序，多级缓存秒级响应。如需具体对接技术文档，请点击下方「定制服务」联系技术支持人员。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <MessagesSquare className="w-4 h-4 text-emerald-500" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate">微信小程序对接</span>
-                  <span className="block text-[10px] font-semibold text-emerald-600/80 normal-case tracking-normal">无需开发 极速嵌接</span>
-                </span>
-              </button>
-              <button
-                onClick={() => alert("APP集成方案：全面支持 iOS/Android Native App 集成、Flutter/React Native 混合架构。轻量级 SDK 方案可使研发在 3 小时内实现首款游戏落地接入。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <Smartphone className="w-4 h-4 text-blue-500" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate">APP 集成安全方案</span>
-                  <span className="block text-[10px] font-semibold text-blue-600/75 normal-case tracking-normal">iOS & Android 无缝嵌入</span>
-                </span>
-              </button>
-              <button
-                onClick={() => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现游戏金币、成长值、优惠券等道具资产与核心用户库的实时结算流。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <Code className="w-4 h-4 text-amber-500" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate">活动接口打通</span>
-                  <span className="block text-[10px] font-semibold text-amber-600/80 normal-case tracking-normal">资产互通 数据同步</span>
-                </span>
-              </button>
-            </div>
+            <IntegrationOptionsSection items={integrationItems} />
             <div className="space-y-0.5">
               <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
                 服务与支持
@@ -2765,137 +2738,39 @@ export default function GamifiedMarketingCenter() {
 
       {/* 2. Right Content Block */}
       <section id="gamified-scroll" className="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar bg-[#F8FAFC]">
-        {detailTemplateId ? (
-          // --- TEMPLATE DETAILS ROUTE PAGE ---
-          <div className="w-full px-5 py-6 sm:px-7 xl:px-10 space-y-6 animate-in fade-in duration-300">
-
-            {/* Main Interactive Details Layout */}
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-7 items-start pt-2 max-w-[1680px] mx-auto">
-              
-              {/* Left Column: Fixed Phone Mockup containing the active game screen */}
-              <div className="xl:col-span-7 xl:sticky xl:top-4 flex flex-col items-center rounded-[30px] bg-[linear-gradient(135deg,#f4f7ff,#ffffff)] border border-blue-50 shadow-[0_18px_60px_rgba(30,58,138,0.08)] py-6 relative overflow-visible">
-                <div className="absolute right-6 top-6 z-20 flex flex-col items-center gap-3">
-                  <button 
-                    onClick={() => toggleFavorite(detailTemplateId!)}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition-all cursor-pointer active:scale-95 shadow-md"
-                    title={favorites.has(detailTemplateId!) ? "取消收藏" : "收藏模板"}
-                  >
-                    <Heart className={cn("w-5 h-5 transition-colors", favorites.has(detailTemplateId!) ? "fill-red-500 text-red-500 border-transparent animate-pulse" : "text-slate-650")} />
-                  </button>
-
-                  <div className="relative group/share">
-                    <button 
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 hover:bg-slate-50 bg-white text-slate-650 transition-all cursor-pointer active:scale-95 shadow-md"
-                      title="查看/分享二维码"
-                    >
-                      <Share2 className="w-5 h-5 text-slate-600" />
-                    </button>
-                    
-                    <div className="absolute right-0 top-full mt-2 w-[178px] p-3 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 pointer-events-none opacity-0 group-hover/share:opacity-100 group-hover/share:pointer-events-auto transition-all duration-300 transform scale-95 group-hover/share:scale-100 origin-top flex flex-col items-center gap-2 bg-white/98 backdrop-blur-md">
-                      <div className="w-36 h-36 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center p-2 relative group/qr shadow-xs">
-                        <img
-                          src={shareQrReference}
-                          alt="微信扫描二维码"
-                          className="h-full w-full object-contain"
-                        />
-                      </div>
-                      <span className="text-[11px] font-black text-slate-700 flex items-center gap-1.5 leading-none whitespace-nowrap mt-1">
-                        <ScanLine className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
-                        微信扫描二维码
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative flex flex-col items-center">
-                  <div className="relative w-[min(430px,54vh)] h-[min(835px,calc(100vh-150px))] rounded-[42px] border-[12px] border-slate-900 bg-slate-950 shadow-2xl flex flex-col overflow-hidden select-none ring-8 ring-white">
-                    <img
-                      src={gameDetailPreviewReference}
-                      alt="模板详情预览图"
-                      className="h-full w-full object-cover object-top"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Game Details tags and grid recommended templates */}
-              <div className="xl:col-span-5 space-y-5">
-                
-                {/* 1. Core Header and Description Card with Tags and actions */}
-                <div className="bg-white rounded-[28px] border border-slate-100 p-6 md:p-7 shadow-[0_16px_44px_rgba(30,58,138,0.08)] flex flex-col justify-between relative overflow-visible group">
-                  <div className="absolute top-0 right-0 w-44 h-44 bg-gradient-to-bl from-blue-50 to-transparent rounded-full pointer-events-none" />
-                  <div className="flex items-start justify-between flex-wrap gap-4 z-10">
-                    <div className="flex items-center">
-                      <div>
-                        <span className="text-[12px] uppercase font-black tracking-widest text-blue-600 bg-blue-50 border border-blue-100/50 px-2.5 py-1 rounded-md leading-none">
-                          {TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.type} • 节日大促特荐
-                        </span>
-                        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-3 leading-tight">
-                          {TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.title}
-                        </h2>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Tags displayed directly below Title (max 3 tags) */}
-                  <div className="flex flex-wrap gap-2 mt-4 z-10">
-                    {[
-                      TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.type,
-                      `${TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.style}风格`,
-                      TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.scene !== "全部" 
-                        ? TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.scene 
-                        : "通用节日"
-                    ].filter(Boolean).slice(0, 3).map((tag, idx) => (
-                      <span 
-                        key={idx} 
-                        className="text-[13px] font-bold px-2.5 py-1.5 bg-slate-100 text-slate-650 rounded-xl hover:bg-slate-200/60 transition-colors cursor-default"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Buttons directly below Tags: AI做同款, 立即发布 */}
-                  <div className="mt-8 grid grid-cols-2 gap-3 z-10">
-                    <button 
-                      onClick={() => alert(`已一键导入【${TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.title}】！玩法对应的AI策划、前端画风资源和默认积分奖池已同步下发至您的主后台，可进入玩法编辑台二次调整参数。`)}
-                      className={cn("px-5 py-4 text-white text-[13.5px] font-black rounded-2xl transition-all duration-300 shadow-md active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer hover:shadow-lg", themeBtn)}
-                    >
-                      <Sparkles className="w-5 h-5 fill-white" />
-                      AI 做同款
-                    </button>
-                    
-                    <button 
-                      onClick={() => alert(`恭喜，【${TEMPLATES_DATA.find(t => t.id === detailTemplateId)?.title}】一键线上发布成功！活动海报、微端落地页已同步上线，您可以扫码进行线上真实环境核销与试玩。`)}
-                      className="px-5 py-4 text-white bg-slate-900 hover:bg-slate-800 font-extrabold rounded-2xl text-[13.5px] transition-all active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer shadow-md hover:shadow-lg"
-                    >
-                      <Rocket className="w-5 h-5 text-emerald-400" />
-                      立即发布
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-4 pt-2">
-                  <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                    <Flame className="w-5 h-5 text-rose-500 fill-rose-500/10" />
-                    相似玩法推荐
-                  </h3>
-
-                  <div className="grid grid-cols-3 gap-3">
-                    {TEMPLATES_DATA.filter(t => t.id !== detailTemplateId).slice(0, 15).map((item, index) => (
-                      <MarketingTemplateCard
-                        key={item.id}
-                        item={item}
-                        index={index}
-                        onDetail={() => handleSelectTemplateDetail(item.id)}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
+        {detailTemplateId && currentDetailTemplate ? (
+          <SiteTemplateDetailPage
+            template={currentDetailTemplate}
+            previewImage={getTemplateImage(
+              Math.max(
+                0,
+                TEMPLATES_DATA.findIndex((t) => t.id === detailTemplateId)
+              ),
+              currentDetailTemplate.type
+            )}
+            recommendations={TEMPLATES_DATA.filter((t) => t.id !== detailTemplateId).map((item) => ({ id: item.id }))}
+            renderRecommendationCard={(item, index) => {
+              const target = TEMPLATES_DATA.find((t) => t.id === item.id)!;
+              return (
+                <MarketingTemplateCard
+                  key={target.id}
+                  item={target}
+                  index={index}
+                  onDetail={() => handleSelectTemplateDetail(target.id)}
+                />
+              );
+            }}
+            onBack={() => {
+              setDetailTemplateId(null);
+              setTrialGameId(null);
+              setGameState("start");
+            }}
+            onPrimaryAction={() => alert(`已一键导入【${currentDetailTemplate.title}】！玩法对应的AI策划、前端画风资源和默认积分奖池已同步下发至您的主后台，可进入玩法编辑台二次调整参数。`)}
+            onSecondaryAction={() => alert(`恭喜，【${currentDetailTemplate.title}】一键线上发布成功！活动海报、微端落地页已同步上线，您可以扫码进行线上真实环境核销与试玩。`)}
+            onToggleFavorite={() => toggleFavorite(detailTemplateId!)}
+            isFavorite={favorites.has(detailTemplateId!)}
+            themeButtonClassName={themeBtn}
+          />
         ) : activeSidebar === "center" ? (
           <div className="w-full animate-in fade-in duration-300">
             <GameSearchHero
@@ -2966,6 +2841,7 @@ export default function GamifiedMarketingCenter() {
                     items={catConfig.subPlaystyles.map((sub) => ({ id: sub === "全部" ? activeSidebar : sub, name: sub }))}
                     active={selectedCategorySubFilter === "全部" ? activeSidebar : selectedCategorySubFilter}
                     onSelect={(id) => setSelectedCategorySubFilter(id === activeSidebar ? "全部" : id)}
+                    showIcons={false}
                   />
 
                   <TemplateGalleryPanel

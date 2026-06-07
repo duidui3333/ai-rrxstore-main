@@ -31,10 +31,19 @@ export default function Header({ isScrolled = false, currentRoute = "#" }: { isS
             onClick={(e) => { e.preventDefault(); window.location.hash = "#"; }} 
             className={cn(
               "font-semibold transition-colors",
-              (currentRoute !== "#gamified-marketing" && currentRoute !== "#ai-quiz" && currentRoute !== "#ai-voting" && currentRoute !== "#ai-marketing") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
+              (currentRoute !== "#ai-design" && currentRoute !== "#gamified-marketing" && currentRoute !== "#ai-quiz" && currentRoute !== "#ai-voting" && currentRoute !== "#ai-marketing") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
             )}
           >
             模板中心
+          </a>
+          <a 
+            href="#ai-design" 
+            className={cn(
+              "font-semibold transition-colors relative flex items-center select-none",
+              currentRoute === "#ai-design" ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
+            )}
+          >
+            AI设计
           </a>
           <a 
             href="#gamified-marketing" 

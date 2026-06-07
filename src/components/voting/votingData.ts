@@ -686,13 +686,52 @@ export const HOT_SEARCHES = [
   { text: "语音投票", icon: "🎙️", hot: false }
 ];
 
-import imgTemplateCover1 from "../../assets/images/marketing_template_cover_1_1779935600707.png";
-import imgTemplateCover2 from "../../assets/images/marketing_template_cover_2_1779935619140.png";
-import imgTemplateCover3 from "../../assets/images/marketing_template_cover_3_1779935640170.png";
+import templateImage1 from "../../assets/images/template_image_01.png";
+import templateImage2 from "../../assets/images/template_image_02.png";
+import templateImage3 from "../../assets/images/template_image_03.png";
+import templateImage4 from "../../assets/images/template_image_04.png";
+import templateImage5 from "../../assets/images/template_image_05.png";
+import templateImage6 from "../../assets/images/template_image_06.png";
+import templateImage7 from "../../assets/images/template_image_07.png";
+import templateImage8 from "../../assets/images/template_image_08.png";
+import templateImage9 from "../../assets/images/template_image_09.png";
+import templateImage10 from "../../assets/images/template_image_10.png";
+import templateImage11 from "../../assets/images/template_image_11.png";
+import templateImage12 from "../../assets/images/template_image_12.png";
 
-export const getTemplateImage = (id: string, idx = 0) => {
-  const images = [imgTemplateCover1, imgTemplateCover2, imgTemplateCover3];
-  return images[idx % images.length];
+const TEMPLATE_IMAGE_POOL = [
+  templateImage1,
+  templateImage2,
+  templateImage3,
+  templateImage4,
+  templateImage5,
+  templateImage6,
+  templateImage7,
+  templateImage8,
+  templateImage9,
+  templateImage10,
+  templateImage11,
+  templateImage12,
+];
+
+const CATEGORY_IMAGE_OFFSETS: Record<string, number> = {
+  全部: 0,
+  照片投票: 2,
+  视频投票: 5,
+  语音投票: 8,
+  知识投票: 1,
+  闯关投票: 6,
+  PK投票: 9,
+  趣味投票: 4,
+  学习投票: 7,
+  练习: 3,
+  考试: 10,
+  课程: 11,
+};
+
+export const getTemplateImage = (id: string, idx = 0, categoryKey = "全部") => {
+  const offset = CATEGORY_IMAGE_OFFSETS[categoryKey] ?? 0;
+  return TEMPLATE_IMAGE_POOL[(offset + idx) % TEMPLATE_IMAGE_POOL.length];
 };
 
 export const getTemplateStyle = (id: string) => {

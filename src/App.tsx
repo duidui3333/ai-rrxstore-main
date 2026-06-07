@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Header from "./components/Header";
 import StoreBanner from "./components/StoreBanner";
+import ThemeBar from "./components/ThemeBar";
 import DiscoveryWidgets from "./components/DiscoveryWidgets";
 import TemplateGrid from "./components/TemplateGrid";
 import PreferenceModal from "./components/PreferenceModal";
@@ -20,6 +21,9 @@ import GamifiedMarketingCenter from "./components/GamifiedMarketingCenter";
 import AiQuizCenter from "./components/AiQuizCenter";
 import AiVotingCenter from "./components/AiVotingCenter";
 import AiMarketingCenter from "./components/AiMarketingCenter";
+import AiDesignCenter from "./components/AiDesignCenter";
+import TemplateCenterDetail from "./components/TemplateCenterDetail";
+import type { TemplateCenterDetailData } from "./components/TemplateCenterDetail";
 import { getThemePalette } from "./lib/themeUtils";
 import { cn } from "./lib/utils";
 
@@ -241,11 +245,18 @@ export default function App() {
   const [activeTheme, setActiveTheme] = useState("精选推荐");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPreferenceModalOpen, setIsPreferenceModalOpen] = useState(false);
+  const [templateDetail, setTemplateDetail] = useState<null | TemplateCenterDetailData>(null);
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleHashChange = () => {
       setCurrentRoute(window.location.hash || "#");
+      if (window.location.hash === "#template-detail") {
+        const raw = window.sessionStorage.getItem("template-center-detail");
+        setTemplateDetail(raw ? JSON.parse(raw) : null);
+      } else {
+        setTemplateDetail(null);
+      }
       // Scroll main area to top if navigated back
       if (mainRef.current) {
         mainRef.current.scrollTop = 0;
@@ -321,12 +332,24 @@ export default function App() {
   const isQuiz = currentRoute === "#ai-quiz";
   const isVoting = currentRoute === "#ai-voting";
   const isMarketing = currentRoute === "#ai-marketing";
+  const isAiDesign = currentRoute === "#ai-design";
+  const isTemplateDetail = currentRoute === "#template-detail" && templateDetail;
 
   return (
     <div className="h-screen bg-[#F5F7FA] font-sans flex flex-col overflow-hidden">
       <Header isScrolled={isScrolled} currentRoute={currentRoute} />
       
-      {isGamified ? (
+      {isTemplateDetail ? (
+        <TemplateCenterDetail
+          template={templateDetail}
+          onBack={() => {
+            const originHash = window.sessionStorage.getItem("template-center-detail-origin") || "#";
+            window.location.hash = originHash;
+            window.sessionStorage.removeItem("template-center-detail");
+            window.sessionStorage.removeItem("template-center-detail-origin");
+          }}
+        />
+      ) : isGamified ? (
         <GamifiedMarketingCenter />
       ) : isQuiz ? (
         <AiQuizCenter />
@@ -334,6 +357,8 @@ export default function App() {
         <AiVotingCenter />
       ) : isMarketing ? (
         <AiMarketingCenter />
+      ) : isAiDesign ? (
+        <AiDesignCenter />
       ) : (
         <div className="flex flex-1 w-full overflow-hidden">
           {/* Main scrollable area */}
@@ -341,6 +366,7 @@ export default function App() {
             <div className="w-full space-y-6">
               
               <StoreBanner palette={palette} />
+              <ThemeBar activeTheme={activeTheme} onThemeChange={setActiveTheme} />
               <DiscoveryWidgets />
               
               {/* The Core Marketplace Container */}

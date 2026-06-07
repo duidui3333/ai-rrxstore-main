@@ -3,6 +3,7 @@ import { cn } from "../lib/utils";
 import {
   Brain, BookOpen, Trophy, Video, Sparkles, Search, ArrowLeft,
   Heart, Info, Flame, LayoutTemplate, HelpCircle, X, RotateCcw, ScanLine, Share2,
+  Eye,
   Rocket, Code, Briefcase, MessagesSquare, ChevronRight, Home, Smartphone
 } from "lucide-react";
 
@@ -12,6 +13,9 @@ import {
 } from "./voting/votingData";
 import { VotingAppSimulator } from "./voting/VotingAppSimulator";
 import { VotingConfigPanel } from "./voting/VotingConfigPanel";
+import IntegrationOptionsSection from "./IntegrationOptionsSection";
+import TemplateCard from "./TemplateCard";
+import SiteTemplateDetailPage from "./SiteTemplateDetailPage";
 
 import imgFeatured from "../assets/images/cat_featured_1779523249218.png";
 import imgElimination from "../assets/images/cat_elimination_1779523103546.png";
@@ -20,6 +24,10 @@ import imgSynthesis from "../assets/images/cat_synthesis_1779523162184.png";
 import imgStage from "../assets/images/cat_stage_1779523182209.png";
 import imgReaction from "../assets/images/cat_reaction_1779523199030.png";
 import imgAction from "../assets/images/cat_action_1779523229602.png";
+import categoryTabAll from "../assets/images/category-tabs/tab_all.png";
+import imgPhotoVotingIcon from "../assets/images/voting-icons/photo-voting-v2.png";
+import imgVideoVotingIcon from "../assets/images/voting-icons/video-voting-v2.png";
+import imgVoiceVotingIcon from "../assets/images/voting-icons/voice-voting-v2.png";
 
 type RouteMode = "center" | string;
 type TemplateType = typeof TEMPLATES_DATA[number];
@@ -73,6 +81,13 @@ const HOT_SEARCH_EMOJI_MAP: Record<string, string> = {
 
 const getHotSearchEmoji = (value: string) => HOT_SEARCH_EMOJI_MAP[value] || "🔥";
 
+const VOTING_CATEGORY_ICON_MAP: Record<string, string> = {
+  全部: categoryTabAll,
+  照片投票: imgPhotoVotingIcon,
+  视频投票: imgVideoVotingIcon,
+  语音投票: imgVoiceVotingIcon,
+};
+
 const getUsageText = (hot: number) => `${(hot / 10000).toFixed(2).replace(/0+$/, "").replace(/\.$/, "")}万人使用`;
 
 const matchSceneFilter = (template: TemplateType, renamedTitle: string, selectedScene: string) => {
@@ -124,6 +139,15 @@ function VotingSearchHero({
     let frame = 0;
     let raf = 0;
     const theme = category || "center";
+    const themeKey = theme.includes("视频")
+      ? "video"
+      : theme.includes("语音")
+        ? "voice"
+        : theme.includes("晋级")
+          ? "bracket"
+          : theme.includes("照片")
+            ? "photo"
+            : "center";
 
     const roundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
       ctx.beginPath();
@@ -139,152 +163,349 @@ function VotingSearchHero({
       ctx.closePath();
     };
 
-    const drawBadge = (ctx: CanvasRenderingContext2D, x: number, y: number, text: string, fill: string) => {
+    const drawPill = (
+      ctx: CanvasRenderingContext2D,
+      x: number,
+      y: number,
+      w: number,
+      h: number,
+      fill: string,
+      alpha = 1
+    ) => {
       ctx.save();
-      ctx.translate(x, y);
+      ctx.globalAlpha = alpha;
       ctx.fillStyle = fill;
-      roundedRect(ctx, -28, -14, 56, 28, 14);
+      roundedRect(ctx, x, y, w, h, Math.min(h / 2, 999));
       ctx.fill();
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 12px sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(text, 0, 1);
       ctx.restore();
+    };
+
+    const drawShell = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number, a: string, b: string) => {
+      const fill = ctx.createLinearGradient(x, y, x + w, y + h);
+      fill.addColorStop(0, a);
+      fill.addColorStop(1, b);
+      ctx.fillStyle = fill;
+      roundedRect(ctx, x, y, w, h, r);
+      ctx.fill();
+    };
+
+    const drawCenterCard = (ctx: CanvasRenderingContext2D, t: number) => {
+      drawShell(ctx, -104, -74, 208, 148, 38, "#ffffff", "#eef5ff");
+
+      const panel = ctx.createLinearGradient(-78, -46, 54, 44);
+      panel.addColorStop(0, "#3d72ff");
+      panel.addColorStop(1, "#7a55ff");
+      ctx.fillStyle = panel;
+      roundedRect(ctx, -82, -50, 118, 88, 28);
+      ctx.fill();
+
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(-44, -4, 20, 0, Math.PI * 2);
+      ctx.fill();
+      drawPill(ctx, -58, 14, 28, 14, "#e6efff");
+      drawPill(ctx, -10, -24, 40, 8, "#ffffff", 0.96);
+      drawPill(ctx, -10, -8, 50, 8, "#ffffff", 0.94);
+      drawPill(ctx, -10, 8, 34, 8, "#ffffff", 0.88);
+
+      ctx.fillStyle = "#ff9b46";
+      roundedRect(ctx, 48, -6, 34, 34, 17);
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(57, 10);
+      ctx.lineTo(64, 17);
+      ctx.lineTo(74, 3);
+      ctx.stroke();
+
+      drawPill(ctx, -78, 52, 156, 14, "#e8efff");
+      const activeWidth = 92 + Math.sin(t * 1.5) * 16;
+      const progressFill = ctx.createLinearGradient(-78, 52, 78, 66);
+      progressFill.addColorStop(0, "#2f6cff");
+      progressFill.addColorStop(1, "#69a7ff");
+      drawPill(ctx, -78, 52, activeWidth, 14, progressFill as unknown as string);
+      ctx.fillStyle = "#ffb14a";
+      ctx.beginPath();
+      ctx.arc(-78 + activeWidth, 59, 9, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#dbeafe";
+      ctx.beginPath();
+      ctx.arc(-70, -64, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#2f6cff";
+      ctx.beginPath();
+      ctx.arc(-70, -64, 4.5, 0, Math.PI * 2);
+      ctx.fill();
     };
 
     const drawPhotoCard = (ctx: CanvasRenderingContext2D, t: number) => {
-      ctx.fillStyle = "#ffffff";
-      roundedRect(ctx, -76, -56, 152, 112, 24);
+      drawShell(ctx, -106, -72, 212, 144, 38, "#ffffff", "#eef5ff");
+
+      const leftCard = ctx.createLinearGradient(-90, -42, -10, 42);
+      leftCard.addColorStop(0, "#c7e1ff");
+      leftCard.addColorStop(1, "#e7d6ff");
+      ctx.fillStyle = leftCard;
+      roundedRect(ctx, -88, -44, 76, 96, 24);
       ctx.fill();
-      ctx.strokeStyle = "rgba(130,160,230,0.22)";
-      ctx.stroke();
-      const sky = ctx.createLinearGradient(-56, -34, 56, 26);
-      sky.addColorStop(0, "#cfe6ff");
-      sky.addColorStop(1, "#f8d9ff");
-      ctx.fillStyle = sky;
-      roundedRect(ctx, -56, -34, 112, 68, 18);
+
+      const rightCard = ctx.createLinearGradient(8, -42, 86, 40);
+      rightCard.addColorStop(0, "#ffe2c8");
+      rightCard.addColorStop(1, "#ffd69b");
+      ctx.fillStyle = rightCard;
+      roundedRect(ctx, 12, -44, 76, 96, 24);
       ctx.fill();
+
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
-      ctx.arc(28, -14, 8, 0, Math.PI * 2);
+      ctx.arc(-50, -12, 18, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = "#67b67c";
       ctx.beginPath();
-      ctx.moveTo(-50, 28);
-      ctx.lineTo(-8, -4);
-      ctx.lineTo(16, 18);
-      ctx.lineTo(38, -2);
-      ctx.lineTo(56, 28);
+      ctx.arc(50, -12, 18, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#6fb982";
+      ctx.beginPath();
+      ctx.moveTo(-76, 30);
+      ctx.lineTo(-56, 4);
+      ctx.lineTo(-36, 20);
+      ctx.lineTo(-16, -2);
+      ctx.lineTo(-16, 40);
       ctx.closePath();
       ctx.fill();
-      drawBadge(ctx, 44, 48, "投票", "#ff8a3d");
-      ctx.save();
-      ctx.translate(-62, -54);
-      ctx.rotate(-0.14 + Math.sin(t * 1.4) * 0.03);
-      ctx.fillStyle = "#ffb14a";
-      roundedRect(ctx, -12, -12, 24, 24, 8);
+
+      ctx.fillStyle = "#f59e0b";
+      ctx.beginPath();
+      ctx.moveTo(22, 26);
+      ctx.lineTo(42, 2);
+      ctx.lineTo(58, 16);
+      ctx.lineTo(78, -4);
+      ctx.lineTo(78, 40);
+      ctx.closePath();
       ctx.fill();
-      ctx.restore();
+
+      const voteY = 56 + Math.sin(t * 1.4) * 2;
+      drawPill(ctx, -80, voteY, 58, 12, "#2f6cff");
+      drawPill(ctx, 22, voteY, 44, 12, "#ff9b46");
+      ctx.strokeStyle = "#7a55ff";
+      ctx.lineWidth = 5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(-14, -62);
+      ctx.lineTo(14, -38);
+      ctx.moveTo(14, -62);
+      ctx.lineTo(-14, -38);
+      ctx.stroke();
     };
 
-    const drawVideoCard = (ctx: CanvasRenderingContext2D) => {
-      const body = ctx.createLinearGradient(-84, -54, 84, 54);
-      body.addColorStop(0, "#ffffff");
-      body.addColorStop(1, "#d9e7ff");
-      ctx.fillStyle = body;
-      roundedRect(ctx, -84, -54, 168, 108, 28);
+    const drawVideoCard = (ctx: CanvasRenderingContext2D, t: number) => {
+      drawShell(ctx, -106, -72, 212, 144, 38, "#ffffff", "#eef5ff");
+
+      const screen = ctx.createLinearGradient(-84, -46, 22, 30);
+      screen.addColorStop(0, "#63a2ff");
+      screen.addColorStop(1, "#2f6cff");
+      ctx.fillStyle = screen;
+      roundedRect(ctx, -86, -48, 118, 86, 26);
       ctx.fill();
-      ctx.strokeStyle = "rgba(130,160,230,0.22)";
-      ctx.stroke();
-      ctx.fillStyle = "#2f6cff";
-      roundedRect(ctx, -58, -24, 116, 60, 20);
-      ctx.fill();
+
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
-      ctx.moveTo(-12, -8);
-      ctx.lineTo(-12, 20);
-      ctx.lineTo(18, 6);
+      ctx.moveTo(-28, -18);
+      ctx.lineTo(-28, 18);
+      ctx.lineTo(8, 0);
       ctx.closePath();
       ctx.fill();
-      for (let i = -72; i <= 72; i += 18) {
-        ctx.fillStyle = i % 36 === 0 ? "#ffb14a" : "#ffd89a";
-        ctx.fillRect(i, -58, 10, 10);
-        ctx.fillRect(i, 48, 10, 10);
-      }
-      drawBadge(ctx, 56, -40, "TOP", "#ff8a3d");
+
+      const cards = [
+        { x: 48, y: -40, h: 28, c0: "#ffe3bf", c1: "#ffb14a" },
+        { x: 48, y: -2, h: 38, c0: "#d8e8ff", c1: "#7db1ff" },
+      ];
+      cards.forEach((card) => {
+        const fill = ctx.createLinearGradient(card.x, card.y, card.x + 28, card.y + card.h);
+        fill.addColorStop(0, card.c0);
+        fill.addColorStop(1, card.c1);
+        ctx.fillStyle = fill;
+        roundedRect(ctx, card.x, card.y, 28, card.h, 10);
+        ctx.fill();
+      });
+
+      drawPill(ctx, -82, 52, 158, 14, "#e8efff");
+      const progress = 96 + Math.sin(t * 1.5) * 16;
+      drawPill(ctx, -82, 52, progress, 14, "#ff9b46");
+      ctx.fillStyle = "#2f6cff";
+      ctx.beginPath();
+      ctx.arc(-82 + progress, 59, 8.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#ffe2bf";
+      roundedRect(ctx, 42, -72, 34, 18, 9);
+      ctx.fill();
     };
 
     const drawVoiceCard = (ctx: CanvasRenderingContext2D, t: number) => {
-      ctx.fillStyle = "#ffffff";
-      roundedRect(ctx, -82, -54, 164, 108, 28);
+      drawShell(ctx, -108, -72, 216, 144, 38, "#ffffff", "#f7f1ff");
+
+      ctx.fillStyle = "#f4f0ff";
+      roundedRect(ctx, -84, -46, 62, 98, 26);
       ctx.fill();
-      ctx.strokeStyle = "rgba(130,160,230,0.22)";
-      ctx.stroke();
-      ctx.fillStyle = "#ff8a3d";
-      roundedRect(ctx, -22, -30, 44, 62, 22);
-      ctx.fill();
-      ctx.fillStyle = "#ffd8be";
-      roundedRect(ctx, -12, -42, 24, 18, 12);
-      ctx.fill();
-      ctx.strokeStyle = "#2f6cff";
-      ctx.lineWidth = 6;
+      ctx.strokeStyle = "#8b5cf6";
+      ctx.lineWidth = 7;
       ctx.lineCap = "round";
       for (let i = 0; i < 5; i += 1) {
-        const height = 10 + Math.sin(t * 2.1 + i) * 8 + i * 5;
+        const bar = 20 + Math.sin(t * 1.9 + i * 0.65) * 8 + i * 5;
+        const x = -66 + i * 11;
         ctx.beginPath();
-        ctx.moveTo(-56 + i * 16, 38);
-        ctx.lineTo(-56 + i * 16, 38 - height);
+        ctx.moveTo(x, 30);
+        ctx.lineTo(x, 30 - bar);
         ctx.stroke();
       }
-      drawBadge(ctx, 52, 42, "语音", "#2f6cff");
+
+      ctx.fillStyle = "#ffffff";
+      roundedRect(ctx, 6, -46, 62, 98, 26);
+      ctx.fill();
+
+      const mic = ctx.createLinearGradient(20, -28, 50, 28);
+      mic.addColorStop(0, "#ffbf7d");
+      mic.addColorStop(1, "#ff8a3d");
+      ctx.fillStyle = mic;
+      roundedRect(ctx, 22, -26, 30, 44, 15);
+      ctx.fill();
+      drawPill(ctx, 18, -38, 38, 12, "#ffe2c7");
+      ctx.strokeStyle = "#ff8a3d";
+      ctx.lineWidth = 4.5;
+      ctx.beginPath();
+      ctx.moveTo(37, 20);
+      ctx.lineTo(37, 34);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(37, 18, 18, 0.2, Math.PI - 0.2);
+      ctx.stroke();
+
+      for (let i = 0; i < 3; i += 1) {
+        const h = 18 + Math.sin(t * 2.1 + i) * 7 + i * 9;
+        ctx.fillStyle = i === 1 ? "#8b5cf6" : "#7eb2ff";
+        roundedRect(ctx, 78 + i * 7, 34 - h, 4, h, 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = "#ede9fe";
+      roundedRect(ctx, 44, -72, 40, 18, 9);
+      ctx.fill();
     };
 
-    const drawBracketCard = (ctx: CanvasRenderingContext2D) => {
-      ctx.fillStyle = "#ffffff";
-      roundedRect(ctx, -82, -60, 164, 120, 28);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(130,160,230,0.22)";
-      ctx.stroke();
+    const drawBracketCard = (ctx: CanvasRenderingContext2D, t: number) => {
+      drawShell(ctx, -108, -76, 216, 152, 38, "#ffffff", "#eef5ff");
       ctx.strokeStyle = "#2f6cff";
-      ctx.lineWidth = 5;
+      ctx.lineWidth = 7;
       ctx.lineCap = "round";
-      [[-44, -20], [-44, 20], [20, -34], [20, 34]].forEach(([cx, cy]) => {
+      [[-62, -26], [-62, 26], [18, -42], [18, 42]].forEach(([cx, cy]) => {
         ctx.beginPath();
-        ctx.arc(cx, cy, 9, 0, Math.PI * 2);
+        ctx.arc(cx, cy, 12, 0, Math.PI * 2);
         ctx.stroke();
       });
       ctx.beginPath();
-      ctx.moveTo(-35, -20);
-      ctx.lineTo(-6, -20);
-      ctx.lineTo(-6, 0);
+      ctx.moveTo(-50, -26);
+      ctx.lineTo(-12, -26);
+      ctx.lineTo(-12, 0);
       ctx.lineTo(10, 0);
-      ctx.lineTo(10, -34);
-      ctx.lineTo(35, -34);
-      ctx.moveTo(-35, 20);
-      ctx.lineTo(-6, 20);
-      ctx.lineTo(-6, 0);
+      ctx.lineTo(10, -42);
+      ctx.lineTo(42, -42);
+      ctx.moveTo(-50, 26);
+      ctx.lineTo(-12, 26);
+      ctx.lineTo(-12, 0);
       ctx.lineTo(10, 0);
-      ctx.lineTo(10, 34);
-      ctx.lineTo(35, 34);
+      ctx.lineTo(10, 42);
+      ctx.lineTo(42, 42);
       ctx.stroke();
-      drawBadge(ctx, 0, 46, "晋级", "#ff8a3d");
+      ctx.fillStyle = "#ff9b46";
+      ctx.beginPath();
+      ctx.arc(68, -56 + Math.sin(t * 1.2) * 1.5, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 4.5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(58, -56);
+      ctx.lineTo(68, -46);
+      ctx.lineTo(80, -62);
+      ctx.stroke();
+    };
+
+    const drawCenterSecondary = (ctx: CanvasRenderingContext2D, t: number) => {
+      drawShell(ctx, -82, -54, 164, 126, 30, "#eef4ff", "#f8f3ff");
+
+      const columns = [
+        { x: -42, h: 36, color: "#93c5fd" },
+        { x: 0, h: 66, color: "#ffb14a" },
+        { x: 42, h: 28, color: "#86efac" },
+      ];
+      columns.forEach((col, i) => {
+        const h = col.h + Math.sin(t * 1.3 + i) * 2;
+        ctx.fillStyle = col.color;
+        roundedRect(ctx, col.x - 15, 42 - h, 30, h, 12);
+        ctx.fill();
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(col.x, 42 - h - 16, i === 1 ? 16 : 13, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.strokeStyle = "#8b5cf6";
+      ctx.lineWidth = 6;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(-50, 8);
+      ctx.lineTo(-14, -8);
+      ctx.lineTo(18, -18 + Math.sin(t * 1.2) * 3);
+      ctx.lineTo(56, -36);
+      ctx.stroke();
+    };
+
+    const drawPhotoSecondary = (ctx: CanvasRenderingContext2D, t: number) => {
+      drawShell(ctx, -84, -54, 168, 118, 30, "#f8fbff", "#eef4ff");
+
+      [-44, 18].forEach((x, idx) => {
+        const fill = ctx.createLinearGradient(x, -28, x + 48, 28);
+        fill.addColorStop(0, idx === 0 ? "#cfe4ff" : "#ffe4c9");
+        fill.addColorStop(1, idx === 0 ? "#e8d8ff" : "#ffd39b");
+        ctx.fillStyle = fill;
+        roundedRect(ctx, x, -28, 48, 62, 18);
+        ctx.fill();
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(x + 24, -6, 12, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      const leftVotes = 56 + Math.sin(t * 1.3) * 5;
+      const rightVotes = 40 + Math.cos(t * 1.2) * 4;
+      drawPill(ctx, -56, 44, leftVotes, 12, "#2f6cff");
+      drawPill(ctx, 12, 44, rightVotes, 12, "#ff9b46");
+
+      [-20, 42].forEach((x, idx) => {
+        ctx.fillStyle = idx === 0 ? "#2f6cff" : "#ff9b46";
+        ctx.beginPath();
+        ctx.arc(x, 60, 6, 0, Math.PI * 2);
+        ctx.fill();
+      });
     };
 
     const drawVotingPrimary = (ctx: CanvasRenderingContext2D, w: number, h: number, t: number) => {
       ctx.clearRect(0, 0, w, h);
       ctx.save();
       ctx.translate(w / 2, h / 2 + Math.sin(t * 1.25) * 5);
+      if (themeKey === "center") ctx.scale(1.12, 1.12);
       ctx.rotate(-0.13 + Math.sin(t * 0.8) * 0.035);
       const glow = ctx.createRadialGradient(0, 0, 20, 0, 0, 126);
       glow.addColorStop(0, "rgba(74,144,255,0.22)");
       glow.addColorStop(1, "rgba(74,144,255,0)");
       ctx.fillStyle = glow;
       ctx.fillRect(-140, -120, 280, 240);
-      if (theme.includes("视频")) drawVideoCard(ctx);
-      else if (theme.includes("语音")) drawVoiceCard(ctx, t);
-      else if (theme.includes("晋级")) drawBracketCard(ctx);
-      else drawPhotoCard(ctx, t);
+      if (themeKey === "video") drawVideoCard(ctx, t);
+      else if (themeKey === "voice") drawVoiceCard(ctx, t);
+      else if (themeKey === "bracket") drawBracketCard(ctx, t);
+      else if (themeKey === "photo") drawPhotoCard(ctx, t);
+      else drawCenterCard(ctx, t);
       ctx.restore();
     };
 
@@ -292,6 +513,7 @@ function VotingSearchHero({
       ctx.clearRect(0, 0, w, h);
       ctx.save();
       ctx.translate(w / 2, h / 2 + Math.cos(t * 1.1) * 4);
+      if (themeKey === "center") ctx.scale(1.12, 1.12);
       ctx.rotate(0.12 + Math.sin(t * 0.75) * 0.035);
       const glow = ctx.createRadialGradient(0, -18, 10, 0, -8, 132);
       glow.addColorStop(0, "rgba(138,107,255,0.24)");
@@ -305,44 +527,72 @@ function VotingSearchHero({
       ctx.fillStyle = base;
       roundedRect(ctx, -82, -70, 164, 138, 34);
       ctx.fill();
-      ctx.strokeStyle = "rgba(118,119,218,0.24)";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-      if (theme.includes("语音")) {
-        ctx.strokeStyle = "#2f6cff";
-        ctx.lineWidth = 6;
-        ctx.lineCap = "round";
-        for (let i = 0; i < 7; i += 1) {
-          const bar = 12 + Math.sin(t * 2.1 + i * 0.6) * 10 + (i % 2 ? 8 : 0);
-          ctx.beginPath();
-          ctx.moveTo(-52 + i * 16, 34);
-          ctx.lineTo(-52 + i * 16, 34 - bar);
-          ctx.stroke();
-        }
-        ctx.fillStyle = "#ff8a3d";
-        ctx.beginPath();
-        ctx.arc(0, -28, 18, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(-5, -14, 10, 24);
-        drawBadge(ctx, 0, 54, "人气", "#ff8a3d");
-      } else {
-        const colors = theme.includes("视频") ? ["#ff8a3d", "#2f6cff", "#ff8a3d"] : ["#2f6cff", "#ff8a3d", "#5ec46b"];
-        colors.forEach((color, i) => {
-          const bar = 34 + Math.sin(t * 1.6 + i) * 8;
-          ctx.fillStyle = color;
-          roundedRect(ctx, -48 + i * 36, 28 - bar, 22, bar, 11);
+      if (themeKey === "voice") {
+        drawPill(ctx, -54, -30, 108, 18, "#ffffff");
+        for (let i = 0; i < 6; i += 1) {
+          const bar = 16 + Math.sin(t * 2.1 + i * 0.55) * 10 + (i % 2 ? 12 : 0);
+          ctx.fillStyle = i % 2 === 0 ? "#7eb2ff" : "#8b5cf6";
+          roundedRect(ctx, -52 + i * 18, 36 - bar, 8, bar, 4);
           ctx.fill();
-        });
-        ctx.strokeStyle = "#9f75ff";
-        ctx.lineWidth = 5;
-        ctx.beginPath();
-        ctx.moveTo(-42, 8);
-        ctx.lineTo(-8, -8);
-        ctx.lineTo(20, -20);
-        ctx.lineTo(50, -36);
-        ctx.stroke();
-        drawBadge(ctx, 0, 54, theme.includes("视频") ? "播放" : "榜单", "#ff8a3d");
+        }
+        ctx.fillStyle = "#ff9b46";
+        roundedRect(ctx, 18, -8, 30, 42, 15);
+        ctx.fill();
+        drawPill(ctx, 14, -20, 38, 12, "#ffe2c7");
+      } else {
+        if (themeKey === "video") {
+          const screen = ctx.createLinearGradient(-58, -42, 22, 24);
+          screen.addColorStop(0, "#74adff");
+          screen.addColorStop(1, "#2f6cff");
+          ctx.fillStyle = screen;
+          roundedRect(ctx, -60, -42, 88, 70, 22);
+          ctx.fill();
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.moveTo(-24, -18);
+          ctx.lineTo(-24, 8);
+          ctx.lineTo(2, -5);
+          ctx.closePath();
+          ctx.fill();
+          [44, 74].forEach((x, i) => {
+            ctx.fillStyle = i === 0 ? "#ffe1bf" : "#d4e6ff";
+            roundedRect(ctx, x, -26 + i * 34, 24, 28, 9);
+            ctx.fill();
+          });
+          drawPill(ctx, -56, 44, 120, 12, "#e8efff");
+          drawPill(ctx, -56, 44, 84 + Math.sin(t * 1.5) * 10, 12, "#ff9b46");
+        } else if (themeKey === "photo") {
+          drawPhotoSecondary(ctx, t);
+        } else if (themeKey === "bracket") {
+          ctx.strokeStyle = "#2f6cff";
+          ctx.lineWidth = 6;
+          ctx.lineCap = "round";
+          [[-48, -22], [-48, 22], [16, -34], [16, 34]].forEach(([cx, cy]) => {
+            ctx.beginPath();
+            ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+            ctx.stroke();
+          });
+          ctx.beginPath();
+          ctx.moveTo(-38, -22);
+          ctx.lineTo(-10, -22);
+          ctx.lineTo(-10, 0);
+          ctx.lineTo(8, 0);
+          ctx.lineTo(8, -34);
+          ctx.lineTo(34, -34);
+          ctx.moveTo(-38, 22);
+          ctx.lineTo(-10, 22);
+          ctx.lineTo(-10, 0);
+          ctx.lineTo(8, 0);
+          ctx.lineTo(8, 34);
+          ctx.lineTo(34, 34);
+          ctx.stroke();
+          ctx.fillStyle = "#ff9b46";
+          ctx.beginPath();
+          ctx.arc(56, -44, 16, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          drawCenterSecondary(ctx, t);
+        }
       }
       ctx.restore();
     };
@@ -381,11 +631,11 @@ function VotingSearchHero({
     <section className="relative overflow-hidden bg-[linear-gradient(135deg,#f4f7ff_0%,#ffffff_48%,#eef4ff_100%)] px-6 py-14 sm:px-10 lg:px-16 lg:py-20">
       <div className="pointer-events-none absolute left-7 top-14 hidden h-44 w-52 rounded-[45%] bg-blue-200/20 blur-3xl md:block" />
       <div className="pointer-events-none absolute right-7 top-8 hidden h-52 w-56 rounded-[45%] bg-violet-200/28 blur-3xl md:block" />
-      <div className="pointer-events-none absolute left-[7%] top-[25%] hidden md:block">
-        <canvas ref={leftCanvasRef} className="h-[210px] w-[280px]" aria-hidden="true" />
+      <div className="pointer-events-none absolute left-[6%] top-[18%] hidden overflow-visible md:block">
+        <canvas ref={leftCanvasRef} className="h-[236px] w-[290px] overflow-visible" aria-hidden="true" />
       </div>
-      <div className="pointer-events-none absolute right-[7%] top-[22%] hidden md:block">
-        <canvas ref={rightCanvasRef} className="h-[230px] w-[260px]" aria-hidden="true" />
+      <div className="pointer-events-none absolute right-[6%] top-[16%] hidden overflow-visible md:block">
+        <canvas ref={rightCanvasRef} className="h-[236px] w-[290px] overflow-visible" aria-hidden="true" />
       </div>
 
       <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
@@ -434,15 +684,17 @@ function VotingSearchHero({
 function VotingCategoryTabs({
   items,
   active,
-  onSelect
+  onSelect,
+  showIcons = true,
 }: {
   items: Array<{ id: string; name: string }>;
   active: string;
   onSelect: (id: string) => void;
+  showIcons?: boolean;
 }) {
   return (
     <div className="relative z-20 -mt-9 flex justify-center px-6 sm:px-8 lg:px-10">
-      <div className="inline-flex max-w-full items-center gap-2 overflow-x-auto rounded-3xl border border-slate-100 bg-white/95 p-3 shadow-[0_16px_40px_rgba(30,58,138,0.08)] backdrop-blur no-scrollbar">
+      <div className="inline-flex max-w-full items-center gap-2 overflow-x-auto rounded-3xl border border-slate-100 bg-white/95 px-3 py-2 shadow-[0_16px_40px_rgba(30,58,138,0.08)] backdrop-blur no-scrollbar">
         {items.map((item, index) => {
           const colorConfig = categoryTabColorMap[item.id] || categoryTabColorMap["全部"];
           const isActive = active === item.id;
@@ -451,19 +703,35 @@ function VotingCategoryTabs({
               key={item.id}
               onClick={() => onSelect(item.id)}
               className={cn(
-                "flex h-12 min-w-[112px] items-center justify-center gap-2 rounded-2xl px-4 text-[13px] font-black transition-all cursor-pointer",
+                showIcons
+                  ? "relative flex h-11 min-w-[104px] items-center justify-center rounded-2xl px-5 text-[13px] font-black transition-all cursor-pointer"
+                  : "relative flex h-10 min-w-[92px] items-center justify-center rounded-2xl px-4 text-[13px] font-black transition-all cursor-pointer",
                 isActive ? colorConfig.active : "text-slate-700 hover:bg-slate-50"
               )}
             >
-              <span className={cn(
-                "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[15px]",
-                isActive ? "bg-white/16" : colorConfig.bg
-              )}>
-                {getHotSearchEmoji(item.id)}
-              </span>
+              {showIcons ? (
+                <span className={cn(
+                  "mr-2 flex h-[40px] w-[40px] shrink-0 items-center justify-center overflow-hidden rounded-full text-[15px]",
+                  isActive ? "bg-white/16" : colorConfig.bg
+                )}>
+                  {VOTING_CATEGORY_ICON_MAP[item.id] ? (
+                    <img
+                      src={VOTING_CATEGORY_ICON_MAP[item.id]}
+                      alt={item.name}
+                      className={cn(
+                        "rounded-full object-cover object-center",
+                        item.id === "全部" ? "h-[88%] w-[88%] scale-100" : "h-full w-full scale-[1.06]"
+                      )}
+                      draggable={false}
+                    />
+                  ) : (
+                    getHotSearchEmoji(item.id)
+                  )}
+                </span>
+              ) : null}
               <span>{item.name}</span>
               {index < items.length - 1 && !isActive && (
-                <span className="ml-3 hidden h-5 w-px bg-slate-100 lg:block" />
+                <span className="pointer-events-none absolute right-[-5px] top-1/2 hidden h-4 w-px -translate-y-1/2 bg-slate-200 lg:block" />
               )}
             </button>
           );
@@ -476,95 +744,50 @@ function VotingCategoryTabs({
 function VotingTemplateCard({
   item,
   index,
+  categoryKey,
   renamedTitle,
   favorites,
   onToggleFavorite,
   onPreview,
   onDetail
 }: {
+  key?: React.Key;
   item: TemplateType;
   index: number;
+  categoryKey: string;
   renamedTitle?: string;
   favorites: Set<string>;
   onToggleFavorite: (id: string, e?: React.MouseEvent) => void;
   onPreview: (id: string) => void;
   onDetail: (id: string) => void;
 }) {
-  const image = getTemplateImage(item.id, index);
+  const image = getTemplateImage(item.id, index, categoryKey);
   const title = renamedTitle || item.title;
-  const badgeText = item.percentage >= 95 ? "热门" : "新品";
-  const badgeClass = item.percentage >= 95 ? "bg-red-500" : "bg-blue-600";
   const tags = [item.type, item.scene === "全部" ? `${item.style}风` : item.scene].filter(Boolean).slice(0, 2);
   const isFav = favorites.has(item.id);
 
   return (
-    <article
+    <TemplateCard
+      key={item.id}
+      title={title}
+      image={image}
+      category={item.type}
+      subCategory={tags[1] || tags[0] || item.type}
+      usageText={item.hot > 10000 ? `${(item.hot / 10000).toFixed(1)}w` : `${item.hot}`}
       onClick={() => onDetail(item.id)}
-      className="group overflow-hidden rounded-2xl bg-white shadow-[0_12px_30px_rgba(30,41,59,0.08)] ring-1 ring-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_44px_rgba(30,41,59,0.14)] cursor-pointer"
-    >
-      <div className={cn("relative aspect-[5/8] overflow-hidden bg-gradient-to-br", item.colorBg)}>
-        <img
-          src={image}
-          alt={title}
-          className="absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-hover:scale-105"
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/34" />
-        <div className={cn("absolute left-3 top-3 rounded-md px-2.5 py-1 text-[12px] font-black text-white shadow-sm backdrop-blur-sm", badgeClass)}>
-          {badgeText}
-        </div>
-        <button
-          onClick={(e) => onToggleFavorite(item.id, e)}
-          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-slate-900/22 text-white backdrop-blur-sm transition hover:bg-slate-900/40 cursor-pointer"
-        >
-          <Heart className={cn("h-4 w-4", isFav && "fill-rose-500 text-rose-500")} />
-        </button>
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-2 bg-slate-950/58 opacity-0 backdrop-blur-[4px] transition-all duration-300 group-hover:opacity-100">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onPreview(item.id);
-            }}
-            className="flex w-[110px] items-center justify-center gap-1.5 rounded-full bg-indigo-600 py-2 text-xs font-black text-white shadow-md transition hover:bg-indigo-700 cursor-pointer"
-          >
-            扫码预览 <ScanLine className="h-3.5 w-3.5" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDetail(item.id);
-            }}
-            className="flex w-[110px] items-center justify-center gap-1.5 rounded-full bg-white py-2 text-xs font-black text-slate-900 shadow-md transition hover:bg-slate-50 cursor-pointer"
-          >
-            查看详情
-          </button>
-        </div>
-      </div>
-      <div className="px-4 pb-4 pt-3">
-        <h3 className="line-clamp-1 text-[14px] font-black text-slate-900" title={title}>
-          {title}
-        </h3>
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <div className="flex min-w-0 flex-wrap gap-1.5">
-            {tags.map((tag) => (
-              <span key={tag} className="rounded-md bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-500">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <div className="flex shrink-0 items-center gap-1 text-[10px] font-bold text-slate-500">
-            <Flame className="h-3 w-3 fill-orange-500 text-orange-500" />
-            {getUsageText(item.hot)}
-          </div>
-        </div>
-      </div>
-    </article>
+      badgeText={item.percentage >= 95 ? "爆款" : undefined}
+      badgeClassName="bg-red-500/90"
+      isFavorite={isFav}
+      onToggleFavorite={(e) => onToggleFavorite(item.id, e)}
+      imageWrapperClassName={cn("bg-gradient-to-br", item.colorBg)}
+    />
   );
 }
 
 function VotingTemplateGallery({
   title,
   templates,
+  categoryKey,
   selectedSort,
   onSortChange,
   filterTabs,
@@ -579,6 +802,7 @@ function VotingTemplateGallery({
 }: {
   title: string;
   templates: TemplateType[];
+  categoryKey: string;
   selectedSort: string;
   onSortChange: (value: string) => void;
   filterTabs?: React.ReactNode;
@@ -616,12 +840,13 @@ function VotingTemplateGallery({
         ) : null}
 
         {templates.length > 0 ? (
-          <div className="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(230px,1fr))]">
+          <div className="grid grid-cols-2 gap-4 pt-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-5 xl:grid-cols-6 2xl:grid-cols-7 min-[1800px]:grid-cols-8">
             {templates.map((item, index) => (
               <VotingTemplateCard
                 key={`${item.id}-${index}`}
                 item={item}
                 index={index}
+                categoryKey={categoryKey}
                 renamedTitle={renamedTitles[item.id]}
                 favorites={favorites}
                 onToggleFavorite={onToggleFavorite}
@@ -672,6 +897,32 @@ export default function AiVotingCenter() {
   const sidebarScrollRef = useRef<HTMLDivElement>(null);
 
   const themeBtn = "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200/50";
+  const integrationItems = [
+    {
+      title: "微信小程序对接",
+      subtitle: "无需开发 极速嵌接",
+      onClick: () => alert("微信小程序对接：支持一键将投票发布为独立微信小程序，多级缓存秒级响应。如需具体对接技术文档，请点击下方「定制服务」联系技术支持人员。"),
+      icon: MessagesSquare,
+      iconClassName: "text-emerald-500",
+      subtitleClassName: "text-emerald-600/80",
+    },
+    {
+      title: "APP 集成安全方案",
+      subtitle: "iOS & Android 无缝嵌入",
+      onClick: () => alert("APP集成方案：全面支持 iOS/Android Native App 集成、Flutter/React Native 混合架构。轻量级 SDK 方案可使研发在 3 小时内实现首款投票活动接入。"),
+      icon: Smartphone,
+      iconClassName: "text-blue-500",
+      subtitleClassName: "text-blue-600/75",
+    },
+    {
+      title: "活动接口打通",
+      subtitle: "资产互通 数据同步",
+      onClick: () => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现投票次数、道具资产与核心用户库的实时结算流。"),
+      icon: Code,
+      iconClassName: "text-amber-500",
+      subtitleClassName: "text-amber-600/80",
+    },
+  ];
 
   const checkSidebarHeight = () => {
     if (sidebarScrollRef.current) {
@@ -850,41 +1101,7 @@ export default function AiVotingCenter() {
 
           {!isShortScreen && (
             <div className="mt-auto px-2 pb-4 space-y-3 text-left shrink-0">
-              <div className="space-y-0.5">
-                <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
-                  接入方案
-                </div>
-                <button
-                  onClick={() => alert("微信小程序对接：支持一键将投票发布为独立微信小程序，多级缓存秒级响应。如需具体对接技术文档，请点击下方「定制服务」联系技术支持人员。")}
-                  className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-                >
-                  <MessagesSquare className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate">微信小程序对接</span>
-                    <span className="block text-[10px] font-semibold text-emerald-600/80 normal-case tracking-normal">无需开发 极速嵌接</span>
-                  </span>
-                </button>
-                <button
-                  onClick={() => alert("APP集成方案：全面支持 iOS/Android Native App 集成、Flutter/React Native 混合架构。轻量级 SDK 方案可使研发在 3 小时内实现首款投票活动接入。")}
-                  className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-                >
-                  <Smartphone className="w-4 h-4 text-blue-500 shrink-0" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate">APP 集成安全方案</span>
-                    <span className="block text-[10px] font-semibold text-blue-600/75 normal-case tracking-normal">iOS & Android 无缝嵌入</span>
-                  </span>
-                </button>
-                <button
-                  onClick={() => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现投票次数、道具资产与核心用户库的实时结算流。")}
-                  className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-                >
-                  <Code className="w-4 h-4 text-amber-500 shrink-0" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate">活动接口打通</span>
-                    <span className="block text-[10px] font-semibold text-amber-600/80 normal-case tracking-normal">资产互通 数据同步</span>
-                  </span>
-                </button>
-              </div>
+              <IntegrationOptionsSection items={integrationItems} />
 
               <div className="space-y-0.5">
                 <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
@@ -925,41 +1142,7 @@ export default function AiVotingCenter() {
 
         {isShortScreen && (
           <div className="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md pt-2 pb-3 px-2 border-t border-slate-100 shadow-[0_-8px_20px_rgba(0,0,0,0.03)] z-20 space-y-3 text-left">
-            <div className="space-y-0.5">
-              <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
-                接入方案
-              </div>
-              <button
-                onClick={() => alert("微信小程序对接：支持一键将投票发布为独立微信小程序，多级缓存秒级响应。如需具体对接技术文档，请点击下方「定制服务」联系技术支持人员。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <MessagesSquare className="w-4 h-4 text-emerald-500" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate">微信小程序对接</span>
-                  <span className="block text-[10px] font-semibold text-emerald-600/80 normal-case tracking-normal">无需开发 极速嵌接</span>
-                </span>
-              </button>
-              <button
-                onClick={() => alert("APP集成方案：全面支持 iOS/Android Native App 集成、Flutter/React Native 混合架构。轻量级 SDK 方案可使研发在 3 小时内实现首款投票活动接入。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <Smartphone className="w-4 h-4 text-blue-500" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate">APP 集成安全方案</span>
-                  <span className="block text-[10px] font-semibold text-blue-600/75 normal-case tracking-normal">iOS & Android 无缝嵌入</span>
-                </span>
-              </button>
-              <button
-                onClick={() => alert("活动接口打通：可接入现有 CRM 以及会员积分体系，完美实现投票次数、道具资产与核心用户库的实时结算流。")}
-                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[13px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer text-left"
-              >
-                <Code className="w-4 h-4 text-amber-500" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate">活动接口打通</span>
-                  <span className="block text-[10px] font-semibold text-amber-600/80 normal-case tracking-normal">资产互通 数据同步</span>
-                </span>
-              </button>
-            </div>
+            <IntegrationOptionsSection items={integrationItems} />
 
             <div className="space-y-0.5">
               <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 select-none">
@@ -1079,156 +1262,52 @@ export default function AiVotingCenter() {
               </main>
             </div>
           ) : (
-            <div className="max-w-[1440px] w-full mx-auto animate-in fade-in duration-300 text-left bg-[#FAFBFD]">
-              <div className="sticky top-0 z-30 pt-6 md:pt-8 pb-4 px-6 md:px-8 flex items-center select-none bg-[#FAFBFD]">
-                <div className="flex items-center gap-1 text-xs text-slate-400 font-bold">
-                  <button onClick={() => setDetailTemplateId(null)} className="hover:text-indigo-650 transition-colors cursor-pointer font-extrabold flex items-center gap-1">
-                    <ArrowLeft className="w-3.5 h-3.5" /> 返回首页
-                  </button>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-                  <span className="text-slate-905 font-black">{previewTemplate.type}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-                  <span className="text-slate-500 font-medium truncate max-w-[150px] sm:max-w-xs" title={previewTemplate.title}>{previewTemplate.title}</span>
-                </div>
-              </div>
-
-              <div className="px-6 md:px-8 pb-12">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                  <div className="lg:col-span-12 xl:col-span-5 lg:sticky lg:top-24 flex flex-col items-center">
-                    <div className="relative flex flex-col items-center">
-                      <div className="relative w-[min(340px,44vh)] h-[min(660px,85vh)] rounded-[36px] border-[10px] border-slate-900 bg-slate-950 shadow-2xl flex flex-col overflow-hidden select-none ring-4 ring-slate-100/80">
-                        <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-[68px] h-3 bg-slate-900 border border-slate-805 rounded-full z-50 flex items-center justify-center">
-                          <div className="w-1 h-1 rounded-full bg-slate-800" />
-                        </div>
-                        <div className="absolute top-0.5 inset-x-0 h-4 bg-transparent z-40 flex items-center justify-between px-5 text-white/90 text-[8.5px] font-mono select-none">
-                          <span>08:53</span>
-                          <div className="flex items-center gap-1">
-                            <span>● WI-FI</span>
-                            <span className="text-emerald-400">100%</span>
-                          </div>
-                        </div>
-                        <div className="flex-1 relative overflow-hidden bg-slate-950 flex flex-col justify-between pt-4">
-                          <div className="flex-grow flex flex-col justify-center items-center scale-95 origin-center">
-                            <VotingAppSimulator
-                              templateId={previewTemplate.id}
-                              title={previewTemplate.title}
-                              colorBg={previewTemplate.colorBg}
-                              themeBtn={themeBtn}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="xl:absolute xl:top-8 xl:-right-14 xl:left-auto flex xl:flex-col flex-row gap-3 mt-4 xl:mt-0 z-45">
-                        <button
-                          onClick={() => toggleFavorite(previewTemplate.id)}
-                          className="p-3 rounded-full border border-slate-200 bg-white text-slate-600 transition-all cursor-pointer active:scale-95 shadow-md flex items-center justify-center w-11 h-11"
-                          title={favorites.has(previewTemplate.id) ? "取消收藏" : "收藏模板"}
-                        >
-                          <Heart className={cn("w-5 h-5 transition-colors", favorites.has(previewTemplate.id) ? "fill-red-500 text-red-500 border-transparent animate-pulse" : "text-slate-650")} />
-                        </button>
-
-                        <div className="relative group/share font-sans">
-                          <button className="p-3 rounded-full border border-slate-200 hover:bg-slate-50 bg-white text-slate-650 transition-all cursor-pointer active:scale-95 shadow-md flex items-center justify-center w-11 h-11" title="查看/分享二维码">
-                            <Share2 className="w-5 h-5 text-slate-600" />
-                          </button>
-                          <div className="absolute right-0 xl:right-auto xl:left-1/2 xl:-translate-x-1/2 top-full mt-2 w-[200px] p-4 bg-white border border-slate-200 rounded-2xl shadow-xl z-55 pointer-events-none opacity-0 group-hover/share:opacity-100 group-hover/share:pointer-events-auto transition-all duration-300 transform scale-95 group-hover/share:scale-100 origin-top flex flex-col items-center gap-2 bg-white/98 backdrop-blur-md">
-                            <span className="text-[11px] font-black text-slate-700 flex items-center gap-1 leading-none whitespace-nowrap">
-                              <ScanLine className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
-                              微信扫码真机试玩
-                            </span>
-                            <div className="w-28 h-28 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center p-1.5 relative shadow-xs">
-                              <svg className="w-full h-full text-slate-800" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="5" y="5" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="4" />
-                                <rect x="11" y="11" width="10" height="10" rx="1.5" fill="currentColor" />
-                                <rect x="73" y="5" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="4" />
-                                <rect x="79" y="11" width="10" height="10" rx="1.5" fill="currentColor" />
-                                <rect x="5" y="73" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="4" />
-                                <rect x="11" y="79" width="10" height="10" rx="1.5" fill="currentColor" />
-                                <rect x="42" y="42" width="16" height="16" rx="3" fill="#4f46e5" />
-                                <text x="50" y="54" fontSize="10" fill="white" fontWeight="bold" textAnchor="middle">💡</text>
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-12 xl:col-span-7 space-y-6">
-                    <div className="bg-white rounded-3xl border border-slate-100 p-6 md:p-8 shadow-xs flex flex-col justify-between relative overflow-hidden group text-left">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-indigo-50 to-transparent rounded-full pointer-events-none" />
-                      <div>
-                        <span className="text-[10px] uppercase font-black tracking-widest text-[#1C68F5] bg-[#EDF5FF] border border-[#E3EFFF] px-2.5 py-1 rounded-md leading-none">
-                          {previewTemplate.type} • 精选智能投票
-                        </span>
-                        <h2 className="text-xl sm:text-2xl font-black text-slate-800 mt-2.5 leading-none">
-                          {previewTemplate.title}
-                        </h2>
-                      </div>
-
-                      <p className="text-slate-500 text-[13.5px] leading-relaxed font-semibold mt-4 z-10 text-left">
-                        支持通过 AI 智能生成候选内容，生成个性化同款投票营销活动，或直接使用此模板快速设置并发布活动。内置高度适配当前题材的专业展示框架及防刷票逻辑。支持配置阶梯式投票奖励池、一键 OAuth 会员鉴权和精准倒计时控速。
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 mt-4 z-10">
-                        {[previewTemplate.type, `${previewTemplate.style}风格`, previewTemplate.scene !== "全部" ? previewTemplate.scene : "通用场景"].filter(Boolean).slice(0, 3).map((tag, idx) => (
-                          <span key={idx} className="text-[11px] font-bold px-2.5 py-1.5 bg-slate-100 text-slate-650 rounded-xl">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className="mt-10 flex gap-4 flex-wrap z-10">
-                        <button
-                          onClick={() => setIsWorkspaceMode(true)}
-                          className={cn("px-8 py-4 text-white text-[13.5px] font-black rounded-xl transition-all duration-300 shadow-bold active:scale-95 flex items-center gap-2.5 cursor-pointer hover:shadow-lg", themeBtn)}
-                        >
-                          <Sparkles className="w-5 h-5 fill-white" />
-                          AI 做同款
-                        </button>
-                        <button
-                          onClick={() => alert(`恭喜，【${previewTemplate.title}】一端发布成功！投票海报、微端落地页已同步上线，您可以扫码进行线上真实环境核销与试玩。`)}
-                          className="px-8 py-4 text-white bg-slate-900 hover:bg-slate-800 font-extrabold rounded-xl text-[13.5px] transition-all active:scale-95 flex items-center gap-2.5 cursor-pointer shadow-md hover:shadow-lg"
-                        >
-                          <Rocket className="w-5 h-5 text-emerald-400" />
-                          立即发布
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4 pt-2 text-left">
-                      <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5 select-none">
-                        <Flame className="w-4 h-4 text-rose-500 fill-rose-500/10" />
-                        相似爆款模板推荐
-                      </h3>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {TEMPLATES_DATA.filter((t) => t.id !== previewTemplate.id).slice(0, 3).map((item, index) => (
-                          <VotingTemplateCard
-                            key={item.id}
-                            item={item}
-                            index={index}
-                            renamedTitle={renamedTitles[item.id]}
-                            favorites={favorites}
-                            onToggleFavorite={toggleFavorite}
-                            onPreview={setPreviewModalTemplateId}
-                            onDetail={handleSelectTemplateDetail}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <SiteTemplateDetailPage
+              template={previewTemplate}
+              previewImage={getTemplateImage(previewTemplate.id)}
+              qrPreview={
+                <svg className="w-full h-full text-slate-800" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="5" y="5" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="4" />
+                  <rect x="11" y="11" width="10" height="10" rx="1.5" fill="currentColor" />
+                  <rect x="73" y="5" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="4" />
+                  <rect x="79" y="11" width="10" height="10" rx="1.5" fill="currentColor" />
+                  <rect x="5" y="73" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="4" />
+                  <rect x="11" y="79" width="10" height="10" rx="1.5" fill="currentColor" />
+                  <rect x="42" y="42" width="16" height="16" rx="3" fill="#4f46e5" />
+                  <text x="50" y="54" fontSize="10" fill="white" fontWeight="bold" textAnchor="middle">💡</text>
+                </svg>
+              }
+              recommendations={TEMPLATES_DATA.filter((t) => t.id !== previewTemplate.id).map((item) => ({ id: item.id }))}
+              renderRecommendationCard={(item, index) => {
+                const target = TEMPLATES_DATA.find((t) => t.id === item.id)!;
+                return (
+                  <VotingTemplateCard
+                    key={target.id}
+                    item={target}
+                    index={index}
+                    categoryKey={target.type}
+                    renamedTitle={renamedTitles[target.id]}
+                    favorites={favorites}
+                    onToggleFavorite={toggleFavorite}
+                    onPreview={setPreviewModalTemplateId}
+                    onDetail={handleSelectTemplateDetail}
+                  />
+                );
+              }}
+              onBack={() => setDetailTemplateId(null)}
+              onPrimaryAction={() => setIsWorkspaceMode(true)}
+              onSecondaryAction={() => alert(`恭喜，【${previewTemplate.title}】一端发布成功！投票海报、微端落地页已同步上线，您可以扫码进行线上真实环境核销与试玩。`)}
+              onToggleFavorite={() => toggleFavorite(previewTemplate.id)}
+              isFavorite={favorites.has(previewTemplate.id)}
+              themeButtonClassName={themeBtn}
+            />
           )
         ) : (
           <>
             {activeSidebar === "center" ? (
               <div className="w-full animate-in fade-in duration-300">
                 <VotingSearchHero
-                  title={<>搜索你想要的<span className="text-blue-600">AI 投票模板</span></>}
+                  title={<>搜索你想要的<span className="text-blue-600">投票模板</span></>}
                   searchValue={searchQuery}
                   onSearchChange={setSearchQuery}
                   placeholder={typedPlaceholder || "搜索照片投票、视频投票、语音投票、年度评选等玩法"}
@@ -1244,8 +1323,9 @@ export default function AiVotingCenter() {
                 />
 
                 <VotingTemplateGallery
-                  title={selectedType === "全部" ? "全部投票模板" : `${selectedType}模板`}
+                  title={selectedType === "全部" ? "全部模板" : `${selectedType}模板`}
                   templates={orderedTemplates}
+                  categoryKey={selectedType}
                   selectedSort={selectedSort}
                   onSortChange={setSelectedSort}
                   filterTabs={
@@ -1288,8 +1368,7 @@ export default function AiVotingCenter() {
                 {(() => {
                   const catConfig = CATEGORY_CONFIGS[activeSidebar];
                   if (!catConfig) return null;
-                  const hotTerms = catConfig.subPlaystyles.slice(0, 6).map((text) => ({ text, emoji: getHotSearchEmoji(activeSidebar) }));
-                  const hideCategoryTabs = ["照片投票", "视频投票", "语音投票"].includes(activeSidebar);
+                  const hotTerms = catConfig.subPlaystyles.slice(0, 6).map((text) => ({ text, emoji: getHotSearchEmoji(text) }));
 
                   return (
                     <>
@@ -1306,17 +1385,17 @@ export default function AiVotingCenter() {
                         category={activeSidebar}
                       />
 
-                      {!hideCategoryTabs && (
-                        <VotingCategoryTabs
-                          items={catConfig.subPlaystyles.map((sub) => ({ id: sub === "全部" ? activeSidebar : sub, name: sub }))}
-                          active={selectedCategorySubFilter === "全部" ? activeSidebar : selectedCategorySubFilter}
-                          onSelect={(id) => setSelectedCategorySubFilter(id === activeSidebar ? "全部" : id)}
-                        />
-                      )}
+                      <VotingCategoryTabs
+                        items={catConfig.subPlaystyles.map((sub) => ({ id: sub === "全部" ? activeSidebar : sub, name: sub }))}
+                        active={selectedCategorySubFilter === "全部" ? activeSidebar : selectedCategorySubFilter}
+                        onSelect={(id) => setSelectedCategorySubFilter(id === activeSidebar ? "全部" : id)}
+                        showIcons={false}
+                      />
 
                       <VotingTemplateGallery
                         title={`${activeSidebar}模板`}
                         templates={categoryFiltered}
+                        categoryKey={String(activeSidebar)}
                         selectedSort={selectedSort}
                         onSortChange={setSelectedSort}
                         renamedTitles={renamedTitles}
