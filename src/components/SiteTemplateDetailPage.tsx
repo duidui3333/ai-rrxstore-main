@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Heart, Rocket, ScanLine, Share2, Sparkles } from "lucide-react";
+import { Heart, ScanLine, Share2 } from "lucide-react";
 import { cn } from "../lib/utils";
 import UnifiedTemplateDetailLayout from "./UnifiedTemplateDetailLayout";
 
@@ -106,18 +106,16 @@ export default function SiteTemplateDetailPage({
       primaryAction={
         <button
           onClick={onPrimaryAction}
-          className={cn("px-5 py-4 text-white text-[13.5px] font-black rounded-2xl transition-all duration-300 active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer", themeButtonClassName)}
+          className={cn("px-5 py-4 text-white text-[16px] font-black rounded-2xl transition-all duration-300 active:scale-95 flex items-center justify-center cursor-pointer", themeButtonClassName)}
         >
-          <Sparkles className="w-5 h-5 fill-white" />
           AI 做同款
         </button>
       }
       secondaryAction={
         <button
           onClick={onSecondaryAction}
-          className="px-5 py-4 text-slate-950 bg-blue-50 hover:bg-blue-100 font-extrabold rounded-2xl text-[13.5px] transition-all active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer border border-blue-100"
+          className="px-5 py-4 text-slate-950 bg-blue-50 hover:bg-blue-100 font-extrabold rounded-2xl text-[16px] transition-all active:scale-95 flex items-center justify-center cursor-pointer border border-blue-100"
         >
-          <Rocket className="w-5 h-5 text-slate-950" />
           {secondaryActionLabel}
         </button>
       }
