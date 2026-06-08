@@ -751,17 +751,6 @@ function DesignSearchHero({
         ctx.fill();
       });
 
-      ctx.fillStyle = "#ffffff";
-      roundedRect(ctx, -54, 110, 108, 24, 12);
-      ctx.fill();
-      ctx.strokeStyle = "#f97316";
-      ctx.lineWidth = 2;
-      roundedRect(ctx, -54, 110, 108, 24, 12);
-      ctx.stroke();
-      ctx.fillStyle = "#d1d5db";
-      roundedRect(ctx, -28, 118, 56, 7, 3.5);
-      ctx.fill();
-
       drawFloatingSpark(ctx, -92, -94, 9 + Math.sin(t * 1.6) * 1.2, "#60a5fa", t);
       drawFloatingSpark(ctx, 92, 96, 9 + Math.cos(t * 1.7) * 1.2, "#f59e0b", -t);
       ctx.restore();
@@ -1045,7 +1034,7 @@ function DesignCategoryTabs({
           const isActive = active === item.id;
           return (
             <button key={item.id} onClick={() => onSelect(item.id)} className={cn("relative flex h-11 min-w-[104px] items-center justify-center rounded-2xl px-5 text-[13px] font-black transition-all cursor-pointer", isActive ? colors.active : "text-slate-700 hover:bg-slate-50")}>
-              <span className={cn("mr-2 flex h-[40px] w-[40px] shrink-0 items-center justify-center overflow-hidden rounded-full", isActive ? "bg-white/16" : colors.bg)}>
+              <span className={cn("mr-2 flex h-[38px] w-[38px] shrink-0 items-center justify-center overflow-hidden rounded-full", isActive ? "bg-white/16" : colors.bg)}>
                 <img
                   src={item.icon}
                   alt={item.name}

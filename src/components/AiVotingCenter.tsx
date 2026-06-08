@@ -371,7 +371,6 @@ function VotingSearchHero({
       ctx.fillStyle = mic;
       roundedRect(ctx, 22, -26, 30, 44, 15);
       ctx.fill();
-      drawPill(ctx, 18, -38, 38, 12, "#ffe2c7");
       ctx.strokeStyle = "#ff8a3d";
       ctx.lineWidth = 4.5;
       ctx.beginPath();
@@ -495,6 +494,7 @@ function VotingSearchHero({
       ctx.save();
       ctx.translate(w / 2, h / 2 + Math.sin(t * 1.25) * 5);
       if (themeKey === "center") ctx.scale(1.12, 1.12);
+      if (themeKey === "voice") ctx.scale(0.88, 0.88);
       ctx.rotate(-0.13 + Math.sin(t * 0.8) * 0.035);
       const glow = ctx.createRadialGradient(0, 0, 20, 0, 0, 126);
       glow.addColorStop(0, "rgba(74,144,255,0.22)");
